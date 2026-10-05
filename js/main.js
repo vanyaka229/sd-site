@@ -25,6 +25,9 @@ var TELEGRAM_CHAT_ID = '8653239953';
 
 /* Необязательно: свой приёмник заявок (если появится). Имеет приоритет над Telegram. */
 var BOOKING_ENDPOINT = '';
+
+/* Куда открывать ручную отправку, если автоматическая не прошла. */
+var TELEGRAM_SHARE = 'https://t.me/share/url?url=' + encodeURIComponent('https://vanyaka229.github.io/sd-site/') + '&text=';
 (function () {
   'use strict';
 
@@ -142,6 +145,15 @@ var BOOKING_ENDPOINT = '';
         return;
       }
 
+      var manual = form.querySelector('.booking-form__manual');
+      var showManual = function (text) {
+        if (manual) {
+          manual.hidden = false;
+          manual.setAttribute('href', TELEGRAM_SHARE + encodeURIComponent(message));
+        }
+        setStatus(text, 'error');
+      };
+
       var lines = [
         'Заявка с сайта SD Dance Studio',
         'Имя: ' + name,
@@ -187,9 +199,21 @@ var BOOKING_ENDPOINT = '';
         // получателей можно перечислить через запятую: '688076805,123456789'
         var chats = String(TELEGRAM_CHAT_ID).split(',').map(function (s) { return s.trim(); }).filter(Boolean);
         if (submit) submit.disabled = true;
+
+        // Страховка по времени: если сеть «съела» запрос, через 7 секунд сдаёмся,
+        // разблокируем кнопку и предлагаем отправить вручную. Гонка промисов
+        // срабатывает даже если сам запрос отмену проигнорировал.
+        var controller = window.AbortController ? new AbortController() : null;
+        var guard = new Promise(function (_, reject) {
+          setTimeout(function () {
+            if (controller) { try { controller.abort(); } catch (e) {} }
+            reject(new Error('timeout'));
+          }, 7000);
+        });
+
         // Telegram не отдаёт CORS-заголовки, поэтому запросы отправляем в режиме no-cors:
         // доставка происходит, а ответ браузер прочитать не даёт.
-        Promise.all(chats.map(function (chatId) {
+        Promise.race([Promise.all(chats.map(function (chatId) {
           var body = new URLSearchParams({
             chat_id: chatId,
             text: message,
@@ -198,14 +222,19 @@ var BOOKING_ENDPOINT = '';
           return fetch(url, {
             method: 'POST',
             mode: 'no-cors',
+            signal: controller ? controller.signal : undefined,
             headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
             body: body.toString()
           });
-        })).then(function () {
+        })), guard]).then(function () {
           try { localStorage.setItem('sd_last_booking', String(Date.now())); } catch (e) {}
           done();
-        }).catch(function () {
-          setStatus('Не удалось отправить. Напишите нам в Telegram или позвоните.', 'error');
+        }).catch(function (error) {
+          if (error && error.message === 'timeout') {
+            showManual('Не получилось отправить сразу. Нажмите кнопку ниже — Telegram откроется с готовым текстом.');
+          } else {
+            setStatus('Не удалось отправить. Напишите нам в Telegram или позвоните.', 'error');
+          }
         }).then(function () {
           if (submit) submit.disabled = false;
         });
