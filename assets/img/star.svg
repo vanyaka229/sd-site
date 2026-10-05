@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="9" result="blur"/>
+    </filter>
+  </defs>
+  <path filter="url(#glow)" fill="#7ff3ff" opacity=".95"
+        d="M60 4 74 42 116 44 83 70 94 112 60 88 26 112 37 70 4 44 46 42Z"/>
+  <path fill="#fb12a2"
+        d="M60 8 73 43 112 45 81 68 91 106 60 84 29 106 39 68 8 45 47 43Z"/>
+</svg>

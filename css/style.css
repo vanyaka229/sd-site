@@ -1,0 +1,2018 @@
+/* ==========================================================================
+   SD DANCE STUDIO — вёрстка по макету Figma (лендинг, «Группы», «Выбери своё»)
+   Палитра и пропорции сняты с макета: 1280 / 800 / 375.
+   ========================================================================== */
+
+/* --- 1. Переменные -------------------------------------------------------- */
+:root {
+  --pink: #fcc8f3;
+  --magenta: #fb12a2;
+  --black: #000;
+  --white: #fff;
+
+  --display: 'Oswald', 'Arial Narrow', Impact, sans-serif;
+  --text: 'Onest', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+
+  --shell: 1280px;
+  --pad: min(22px, 1.72vw);
+
+  --header-h: 80px;
+  --radius: 8px;
+
+  /* типографика: значение с макета 1280, ниже 1280 масштабируется по vw */
+  --fs-hero: min(80px, 6.25vw);
+  --fs-title-band: min(84px, 6.56vw);
+  --fs-h1-page: min(84px, 6.56vw);
+  --fs-h2: min(41px, 3.2vw);
+  --fs-h2-sm: min(30px, 2.34vw);
+  --fs-cta: min(56px, 4.38vw);
+  --fs-card: min(26px, 2.03vw);
+  --fs-item: min(22px, 1.72vw);
+  --fs-body: min(17px, 1.33vw);
+  --fs-small: min(15px, 1.17vw);
+  --fs-nav: min(15px, 1.17vw);
+  --fs-btn: min(13.5px, 1.05vw);
+  --fs-logo: min(18px, 1.4vw);
+  --fs-footer-logo: min(49px, 3.83vw);
+  --fs-footer-head: min(20px, 1.56vw);
+
+  --lh-body: 1.3;
+  --tracking-hero: 0.1em;
+  --tracking-nav: 0.02em;
+}
+
+/* --- 2. Базовая разметка -------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--white);
+  color: var(--black);
+  font-family: var(--text);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+p,
+ol,
+ul {
+  margin: 0;
+}
+
+ol,
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--pad);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Дисплейная типографика */
+.display {
+  font-family: var(--display);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 0.95;
+  letter-spacing: 0;
+}
+
+.accent {
+  color: var(--magenta);
+}
+
+/* --- 3. Кнопки ------------------------------------------------------------ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  padding: 0.62em 1.35em 0.72em;
+  border-radius: var(--radius);
+  font-family: var(--text);
+  font-size: var(--fs-btn);
+  font-weight: 500;
+  letter-spacing: var(--tracking-nav);
+  text-transform: uppercase;
+  text-align: center;
+  transition: transform 0.15s ease, background-color 0.2s ease, color 0.2s ease;
+  will-change: transform;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn--magenta {
+  background: var(--magenta);
+  color: var(--black);
+}
+
+.btn--magenta:hover {
+  background: #e00f92;
+}
+
+.btn--pink {
+  background: var(--pink);
+  color: var(--black);
+}
+
+.btn--black {
+  background: var(--black);
+  color: var(--white);
+}
+
+.btn--white {
+  background: var(--white);
+  color: var(--black);
+}
+
+.btn--block {
+  display: flex;
+  width: 100%;
+}
+
+/* --- 4. Шапка ------------------------------------------------------------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: var(--pink);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2vw, 32px);
+  height: var(--header-h);
+  padding-left: 72px;
+  padding-right: 21px;
+  max-width: var(--shell);
+  margin-inline: auto;
+}
+
+.logo {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: var(--fs-logo);
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 3.4vw, 44px);
+  margin-left: auto;
+}
+
+.nav__link {
+  font-size: var(--fs-nav);
+  font-weight: 400;
+  letter-spacing: var(--tracking-nav);
+  text-transform: uppercase;
+  padding-block: 6px;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.nav__link:hover,
+.nav__link[aria-current='page'] {
+  border-bottom-color: currentColor;
+}
+
+.site-header .btn {
+  margin-left: clamp(16px, 3.4vw, 44px);
+}
+
+/* Бургер и мобильное меню */
+.burger {
+  display: none;
+  margin-left: auto;
+  width: 30px;
+  height: 30px;
+  position: relative;
+}
+
+.burger span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 26px;
+  height: 2.5px;
+  background: var(--black);
+  transform: translate(-50%, -50%);
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+.burger span:nth-child(2) {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.burger span:nth-child(3) {
+  display: none;
+}
+
+.burger[aria-expanded='true'] span:nth-child(2) {
+  opacity: 0;
+}
+
+.burger[aria-expanded='true'] span:nth-child(1) {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.mobile-menu {
+  display: none;
+  background: var(--pink);
+  border-top: 1px solid var(--black);
+}
+
+.mobile-menu__link {
+  display: block;
+  padding: 18px var(--pad);
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--black);
+}
+
+.mobile-menu__link:last-child {
+  border-bottom: 0;
+}
+
+/* --- 5. Полосы и секции --------------------------------------------------- */
+.band {
+  background: var(--white);
+}
+
+.hero-band {
+  background: var(--white);
+  padding-block: clamp(10px, 1.7vw, 22px) clamp(24px, 4.8vw, 61px);
+}
+
+.hero-band__title {
+  font-size: var(--fs-hero);
+  letter-spacing: var(--tracking-hero);
+  line-height: 1;
+}
+
+.title-band {
+  background: var(--white);
+  padding-block: clamp(8px, 1.1vw, 14px) clamp(10px, 1.3vw, 17px);
+  font-size: var(--fs-title-band);
+  letter-spacing: var(--tracking-hero);
+  line-height: 1;
+  font-family: var(--display);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.page-hero {
+  background: var(--white);
+  padding-block: clamp(8px, 1.1vw, 14px) clamp(20px, 3.6vw, 46px);
+}
+
+.page-hero__title {
+  font-size: var(--fs-h1-page);
+  letter-spacing: var(--tracking-hero);
+  line-height: 1;
+}
+
+/* Двухколоночные секции: 2/3 + 1/3 как в макете */
+.split {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  align-items: stretch;
+}
+
+.split--reverse {
+  grid-template-columns: 1fr 2fr;
+}
+
+.split__media {
+  position: relative;
+  overflow: hidden;
+  background: #111;
+}
+
+.split__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.split__media--duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.split__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(18px, 2.6vw, 34px) clamp(16px, 2vw, 26px);
+}
+
+.panel--pink {
+  background: var(--pink);
+}
+
+.panel--magenta {
+  background: var(--magenta);
+}
+
+.panel__title {
+  font-size: var(--fs-h2);
+  letter-spacing: 0.005em;
+  line-height: 1.02;
+}
+
+.panel__title--sm {
+  font-size: var(--fs-h2-sm);
+  line-height: 1.04;
+}
+
+.panel__text {
+  font-size: var(--fs-body);
+}
+
+/* Секция A: фото + «ТАНЦЕВАЛЬНАЯ ШКОЛА В ЯЛТЕ» */
+.split--about .split__media {
+  min-height: 480px;
+}
+
+.split--about .split__panel {
+  padding: clamp(8px, 0.95vw, 12px) clamp(14px, 1.6vw, 20px) clamp(30px, 6.6vw, 85px);
+}
+
+.split--about .panel__text {
+  margin-top: auto;
+  max-width: 22em;
+}
+
+/* Секция B: панель DANCEHALL + коллаж */
+.split--style .split__panel {
+  justify-content: center;
+  padding-block: clamp(14px, 2.2vw, 28px);
+}
+
+.split--style .panel__title {
+  margin-bottom: clamp(12px, 2vw, 26px);
+}
+
+.split--style .panel__text {
+  text-align: center;
+  font-size: var(--fs-small);
+  line-height: 1.32;
+  max-width: 17.5em;
+  margin-inline: auto;
+}
+
+.split--style .split__media {
+  min-height: 480px;
+}
+
+/* Секция D: причины */
+.split--reasons {
+  grid-template-columns: 1fr 2fr;
+}
+
+.split--reasons .split__panel {
+  min-height: 600px;
+  padding-inline: 0;
+  padding-block: 0;
+}
+
+.reasons__title {
+  font-size: var(--fs-h2);
+  line-height: 1.02;
+  max-width: 7.6em;
+  padding: clamp(10px, 1.5vw, 19px) clamp(16px, 2vw, 26px) clamp(4px, 0.7vw, 9px);
+}
+
+.reasons__item {
+  border-top: 1px solid var(--black);
+  padding: clamp(10px, 1.3vw, 16px) clamp(16px, 2vw, 26px) clamp(12px, 1.6vw, 20px);
+}
+
+.reasons__item-title {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: var(--fs-item);
+  line-height: 1.05;
+  text-transform: uppercase;
+  margin-bottom: 0.35em;
+}
+
+.reasons__item-text {
+  font-size: var(--fs-small);
+  line-height: 1.35;
+  max-width: 30em;
+}
+
+.reasons__more {
+  display: flex;
+  align-items: center;
+  min-height: clamp(60px, 8.75vw, 112px);
+  padding-inline: clamp(16px, 2vw, 26px);
+  font-size: var(--fs-small);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-nav);
+  border-top: 1px solid var(--black);
+  transition: padding-left 0.2s ease;
+}
+
+.reasons__more:hover {
+  padding-left: calc(clamp(16px, 2vw, 26px) + 6px);
+}
+
+.split--reasons .split__media {
+  min-height: 600px;
+}
+
+/* --- 6. CTA --------------------------------------------------------------- */
+.cta-band {
+  background: var(--magenta);
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 3vw, 34px);
+  padding: clamp(40px, 6vw, 70px) var(--pad);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-band__title {
+  font-size: var(--fs-cta);
+  letter-spacing: 0.01em;
+  line-height: 1.02;
+  position: relative;
+}
+
+/* --- 7. Подвал ------------------------------------------------------------ */
+.site-footer {
+  background: var(--pink);
+  padding: clamp(22px, 2.7vw, 35px) 0 clamp(30px, 4.2vw, 54px);
+}
+
+.site-footer__logo {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: var(--fs-footer-logo);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: 37.5% 56.5% minmax(0, 1fr);
+  column-gap: 0;
+  margin-top: clamp(60px, 14.4vw, 184px);
+}
+
+.footer__col--social {
+  text-align: right;
+}
+
+.footer__head {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: var(--fs-footer-head);
+  line-height: 1.15;
+  text-transform: uppercase;
+  margin-bottom: clamp(10px, 1.2vw, 16px);
+}
+
+.footer__text {
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  margin-bottom: 0.35em;
+}
+
+.footer__text--muted {
+  margin-top: 0.9em;
+}
+
+.footer__links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: clamp(8px, 1vw, 14px);
+}
+
+.footer__link {
+  font-size: var(--fs-small);
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 1px;
+  transition: opacity 0.2s ease;
+}
+
+.footer__link:hover {
+  opacity: 0.6;
+}
+
+/* --- 8. Модальное окно записи -------------------------------------------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgb(0 0 0 / 55%);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.modal[data-open='true'] {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal__box {
+  position: relative;
+  width: min(520px, 100%);
+  background: var(--pink);
+  border-radius: 12px;
+  padding: 28px clamp(18px, 3vw, 34px) 30px;
+  transform: translateY(10px);
+  transition: transform 0.2s ease;
+}
+
+.modal[data-open='true'] .modal__box {
+  transform: translateY(0);
+}
+
+.modal__title {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(24px, 2.2vw, 32px);
+  text-transform: uppercase;
+  line-height: 1.05;
+  margin-bottom: 0.5em;
+}
+
+.modal__text {
+  font-size: var(--fs-body);
+  margin-bottom: 1.2em;
+}
+
+.modal__list {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 1.4em;
+}
+
+.modal__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: var(--fs-body);
+  border-bottom: 1px solid rgb(0 0 0 / 25%);
+  padding-bottom: 8px;
+}
+
+.modal__row b {
+  font-weight: 500;
+}
+
+.modal__close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  font-size: 24px;
+  line-height: 1;
+  border-radius: 50%;
+}
+
+.modal__close:hover {
+  background: rgb(0 0 0 / 8%);
+}
+
+/* --- 9. Страница «Группы» ------------------------------------------------- */
+.groups-intro {
+  display: grid;
+}
+
+.group-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+
+.group-row--flip {
+  grid-template-columns: 2fr 1fr;
+}
+
+.group-panel {
+  position: relative;
+  padding: clamp(18px, 2.4vw, 30px) clamp(16px, 2vw, 26px);
+  min-height: 480px;
+}
+
+.group-panel__head {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(10px, 1.6vw, 22px);
+}
+
+.group-panel__title {
+  font-size: var(--fs-item);
+  line-height: 1.05;
+  letter-spacing: 0.005em;
+}
+
+.group-panel__nick {
+  font-size: var(--fs-small);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-transform: uppercase;
+}
+
+.group-panel__heading {
+  font-size: var(--fs-card);
+  line-height: 1.06;
+  margin: clamp(14px, 2.2vw, 28px) 0 clamp(10px, 1.6vw, 22px);
+}
+
+.group-panel__text {
+  font-size: var(--fs-small);
+  line-height: 1.32;
+  text-transform: uppercase;
+}
+
+.group-panel__text + .group-panel__text {
+  margin-top: 1em;
+}
+
+.group-panel__text--center {
+  text-align: center;
+  max-width: 24em;
+  margin-inline: auto;
+}
+
+.group-panel__note {
+  margin-top: auto;
+  padding-top: clamp(14px, 2vw, 26px);
+  font-size: var(--fs-small);
+  line-height: 1.3;
+  text-transform: uppercase;
+  max-width: 26em;
+}
+
+.group-media {
+  position: relative;
+  overflow: hidden;
+  background: #111;
+}
+
+.group-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.group-media--tall {
+  min-height: 480px;
+}
+
+/* вырезанные фото тренеров */
+.panel-figure {
+  position: absolute;
+  z-index: 1;
+  margin: 0;
+  pointer-events: none;
+}
+
+.panel-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.cutout--ira {
+  left: 1.5%;
+  top: 4%;
+  width: 28%;
+}
+
+.cutout--crew {
+  right: 3%;
+  bottom: 0;
+  width: 17%;
+}
+
+.cutout--katya {
+  left: 1%;
+  bottom: 0;
+  width: 21%;
+}
+
+.cutout--mix {
+  right: 2.5%;
+  top: 8%;
+  width: 19%;
+}
+
+.cutout--dasha {
+  left: 2%;
+  bottom: 0;
+  width: 42%;
+}
+
+.sticker {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.sticker--crew {
+  right: 26%;
+  top: 12%;
+  width: 13%;
+}
+
+.community {
+  position: relative;
+  height: clamp(320px, 37.7vw, 482px);
+  overflow: hidden;
+  background: #101010;
+}
+
+.community img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left center;
+}
+
+.community__title {
+  position: absolute;
+  inset: auto 0 auto 0;
+  top: clamp(24px, 3.4vw, 44px);
+  font-size: clamp(20px, 2.3vw, 30px);
+  line-height: 1.1;
+  max-width: 22em;
+  color: var(--white);
+}
+
+.group-kids-band {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+
+.group-kids-band__text {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(18px, 2.6vw, 34px) clamp(16px, 2vw, 26px) 0;
+}
+
+.group-kids-band__title {
+  font-size: var(--fs-card);
+  line-height: 1.05;
+  text-align: right;
+}
+
+.group-kids-band__note {
+  margin-top: auto;
+  padding-block: clamp(14px, 2vw, 24px);
+  font-size: var(--fs-small);
+  text-transform: uppercase;
+  max-width: 20em;
+  margin-left: auto;
+  text-align: right;
+}
+
+/* --- 10. Страница «Выбери своё» ------------------------------------------- */
+.plans {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.plan {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(16px, 2vw, 26px) clamp(16px, 2vw, 26px) clamp(18px, 2.4vw, 30px);
+  border-left: 1px solid var(--black);
+  min-height: 480px;
+}
+
+.plan:first-child {
+  border-left: 0;
+}
+
+.plan__title {
+  font-size: var(--fs-h2);
+  line-height: 1;
+  margin-bottom: clamp(16px, 3vw, 40px);
+}
+
+.plan__rows {
+  display: grid;
+  gap: clamp(10px, 1.6vw, 20px);
+  margin-bottom: auto;
+}
+
+.plan__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 28px;
+  align-items: baseline;
+  padding-bottom: clamp(8px, 1.2vw, 14px);
+  border-bottom: 1px solid var(--black);
+  font-size: var(--fs-body);
+}
+
+.plan__row span:first-child {
+  flex: 0 0 auto;
+}
+
+.plan .btn {
+  margin-top: clamp(20px, 3.4vw, 44px);
+}
+
+.price-band {
+  background: var(--magenta);
+  position: relative;
+  overflow: hidden;
+  padding: clamp(26px, 3.4vw, 44px) clamp(16px, 2.4vw, 30px) clamp(46px, 6.5vw, 82px);
+}
+
+.price-band__title {
+  font-size: var(--fs-h2);
+  line-height: 1;
+  text-align: center;
+  margin-bottom: clamp(14px, 2.4vw, 30px);
+}
+
+.price-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.25fr;
+  gap: clamp(16px, 3vw, 46px);
+  position: relative;
+}
+
+.price-col__head {
+  font-size: var(--fs-card);
+  line-height: 1;
+  margin-bottom: clamp(12px, 1.8vw, 22px);
+}
+
+.price-list {
+  display: grid;
+  gap: clamp(6px, 1vw, 12px);
+}
+
+.price-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: var(--fs-body);
+}
+
+.price-list .price-list__count {
+  flex: 0 0 auto;
+  min-width: 8em;
+}
+
+.price-list b {
+  font-weight: 700;
+  font-size: clamp(15px, 1.3vw, 18px);
+  white-space: nowrap;
+}
+
+.price-single {
+  text-align: center;
+  font-size: var(--fs-body);
+  margin-bottom: clamp(10px, 1.4vw, 18px);
+}
+
+.price-single b {
+  font-size: clamp(16px, 1.4vw, 20px);
+}
+
+.price-band .btn {
+  display: block;
+  width: min(240px, 100%);
+  margin: clamp(16px, 2.4vw, 28px) auto 0;
+}
+
+.promo {
+  display: grid;
+  gap: clamp(10px, 1.6vw, 20px);
+}
+
+.promo__item {
+  font-size: var(--fs-small);
+  line-height: 1.35;
+}
+
+.promo__item b {
+  font-size: clamp(15px, 1.25vw, 17px);
+}
+
+.promo__value {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(18px, 1.6vw, 24px);
+  white-space: nowrap;
+}
+
+.sticker--price {
+  position: absolute;
+  width: clamp(70px, 8vw, 120px);
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+.sticker--price-1 {
+  left: 2%;
+  bottom: 4%;
+}
+
+.sticker--price-2 {
+  right: 4%;
+  top: 6%;
+}
+
+.sticker--price-3 {
+  left: 46%;
+  top: 10%;
+  width: clamp(54px, 6vw, 92px);
+}
+
+/* --- 11. Анимация появления ---------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.42s ease-out, transform 0.42s ease-out;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* лёгкая задержка для соседних блоков — появление «лесенкой» */
+.reveal--d1 { transition-delay: 0.06s; }
+.reveal--d2 { transition-delay: 0.12s; }
+.reveal--d3 { transition-delay: 0.18s; }
+
+/* нажатия и фокус */
+.btn:focus-visible,
+.nav__link:focus-visible,
+.footer__link:focus-visible,
+.mobile-menu__link:focus-visible,
+.burger:focus-visible,
+.to-top:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--black);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.btn:active {
+  transform: translateY(1px) scale(0.995);
+}
+
+@media (hover: hover) {
+  .split__media img,
+  .group-media img,
+  .community img,
+  .gallery__item img {
+    transition: transform 0.5s ease;
+  }
+
+  .split__media:hover img,
+  .group-media:hover img,
+  .gallery__item:hover img {
+    transform: scale(1.03);
+  }
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .btn:hover {
+    transform: none;
+  }
+}
+
+/* --- Внутренняя раскладка панелей страницы «Группы» (координаты из макета) --- */
+.gp {
+  position: absolute;
+  z-index: 2;
+}
+
+.gp-ira__trainer {
+  left: 35.8%;
+  top: 3.5%;
+}
+
+.gp-ira__heading {
+  left: 52%;
+  top: 7%;
+  width: 40%;
+  text-align: center;
+}
+
+.gp-ira__p1 {
+  left: 42%;
+  top: 45%;
+  width: 33%;
+  text-align: center;
+}
+
+.gp-ira__p2 {
+  left: 2.4%;
+  top: 59%;
+  width: 37%;
+}
+
+.gp-ira__p3 {
+  left: 23%;
+  top: 76%;
+  width: 39%;
+  text-align: center;
+}
+
+.gp-katya__heading {
+  left: 14%;
+  top: 6%;
+  width: 72%;
+  text-align: center;
+}
+
+.gp-katya__p1 {
+  left: 17%;
+  top: 32%;
+  width: 28%;
+  text-align: center;
+}
+
+.gp-katya__p2 {
+  left: 45%;
+  top: 43%;
+  width: 33%;
+  text-align: center;
+}
+
+.gp-katya__p3 {
+  left: 33%;
+  top: 67%;
+  width: 31%;
+  text-align: center;
+}
+
+.gp-katya__trainer {
+  left: 19.5%;
+  bottom: 14%;
+}
+
+/* Блок «Dance Mix 6-8 лет»: текстовая сетка 2x2, фигура тренеров — снизу слева */
+.group-panel--kids {
+  display: grid;
+  grid-template-columns: 46% 54%;
+  grid-template-rows: auto auto auto;
+  align-content: start;
+  gap: clamp(6px, 0.9vw, 12px) clamp(8px, 1.2vw, 16px);
+  padding-bottom: 44%;
+}
+
+.group-panel--kids .gp {
+  position: static;
+}
+
+.gp-kids__title {
+  grid-column: 1 / -1;
+  text-align: right;
+}
+
+.gp-kids__lead {
+  grid-column: 1;
+  align-self: start;
+  text-align: right;
+}
+
+.gp-kids__trainers {
+  grid-column: 1;
+}
+
+.gp-kids__note {
+  grid-column: 2;
+  grid-row: 2 / span 2;
+  text-align: right;
+}
+
+.panel-figure {
+  position: absolute;
+  z-index: 1;
+  margin: 0;
+  pointer-events: none;
+}
+
+.panel-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.panel-figure--ira {
+  left: 2.23%;
+  top: 6.15%;
+  width: 27.71%;
+}
+
+.panel-figure--crew {
+  left: 75.29%;
+  top: 42.92%;
+  width: 18.34%;
+}
+
+.panel-figure--katya {
+  left: 0.82%;
+  top: 38.62%;
+  width: 19.92%;
+}
+
+.panel-figure--mix {
+  left: 76.99%;
+  top: 12.53%;
+  width: 18.87%;
+}
+
+.panel-figure--dasha {
+  left: 0.86%;
+  top: 49.9%;
+  width: 47.81%;
+}
+
+.sticker {
+  position: absolute;
+  z-index: 0;
+  height: auto;
+  pointer-events: none;
+}
+
+.sticker--crew {
+  left: 53%;
+  top: 11%;
+  width: 9.5%;
+}
+
+@media (max-width: 1023px) {
+  .group-panel .gp {
+    position: static;
+    left: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
+    width: auto;
+    text-align: left;
+  }
+
+  .gp-ira__heading,
+  .gp-katya__heading,
+  .gp-kids__title,
+  .gp-kids__lead,
+  .gp-kids__note {
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .group-panel--kids {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 420px;
+    padding-bottom: 30%;
+  }
+}
+
+@media (max-width: 767px) {
+  .group-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-block: 22px 30px;
+  }
+
+  .group-panel .gp {
+    text-align: left;
+  }
+
+  .gp-ira__heading,
+  .gp-katya__heading,
+  .gp-kids__title,
+  .gp-kids__lead,
+  .gp-kids__note {
+    text-align: left;
+    margin-top: 4px;
+  }
+
+  .group-panel--kids {
+    min-height: 360px;
+    padding-bottom: 34%;
+  }
+
+  .cutout--ira {
+    width: 34%;
+  }
+
+  .cutout--crew {
+    width: 24%;
+  }
+
+  .cutout--mix {
+    width: 26%;
+  }
+
+  .cutout--katya {
+    width: 30%;
+  }
+
+  .cutout--dasha {
+    width: 52%;
+  }
+
+  .sticker--crew {
+    width: 20%;
+    right: 30%;
+    left: auto;
+  }
+}
+
+/* Дополнительные блоки страницы «Выбери своё» */
+.price-col--single {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.price-single--big {
+  margin-top: clamp(6px, 1vw, 14px);
+}
+
+.price-single--big b {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(18px, 1.6vw, 24px);
+}
+
+/* --- Группы: планшет и телефон — карточки вместо коллажа ------------------- */
+@media (max-width: 1023px) {
+  .group-panel {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(12px, 2.4vw, 18px);
+    min-height: 0;
+    padding: clamp(20px, 3.4vw, 30px) clamp(16px, 2.6vw, 24px) clamp(24px, 4vw, 34px);
+  }
+
+  .group-panel .gp,
+  .group-panel--kids .gp {
+    position: static;
+    left: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
+    width: auto;
+    text-align: left;
+    order: 0;
+  }
+
+  .group-panel__head {
+    padding-left: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .group-panel__foot,
+  .gp-katya__trainer {
+    margin-top: 0;
+    padding-left: 0;
+  }
+
+  .panel-figure {
+    position: static;
+    order: 20;
+    width: min(64%, 300px);
+    margin: 4px auto 0;
+    padding: clamp(8px, 1.6vw, 14px);
+    background: linear-gradient(180deg, rgb(255 255 255 / 46%), rgb(255 255 255 / 22%));
+    border-radius: 22px;
+    box-shadow: 0 6px 18px rgb(0 0 0 / 6%);
+    overflow: hidden;
+  }
+
+  .panel-figure--dasha {
+    background: linear-gradient(180deg, rgb(255 255 255 / 24%), rgb(255 255 255 / 10%));
+    width: min(70%, 340px);
+  }
+
+  .panel-figure img {
+    object-fit: contain;
+    object-position: bottom center;
+    max-height: 46vh;
+    margin-inline: auto;
+  }
+
+  .kids__top,
+  .gp-kids__title,
+  .gp-kids__lead,
+  .gp-kids__note,
+  .gp-kids__trainers {
+    text-align: left;
+    justify-self: start;
+    max-width: none;
+    margin-inline: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .panel-figure {
+    width: min(78%, 320px);
+  }
+}
+
+/* Полоса «Расписание» на главной странице */
+.schedule-band {
+  background: var(--white);
+  padding-block: clamp(14px, 2vw, 26px) clamp(8px, 1.2vw, 16px);
+}
+
+.schedule-band__inner {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px 24px;
+  flex-wrap: wrap;
+}
+
+.schedule-band__title {
+  font-size: var(--fs-cta);
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.schedule-band__link {
+  font-size: var(--fs-small);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-nav);
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+  transition: opacity 0.2s ease;
+}
+
+.schedule-band__link:hover {
+  opacity: 0.6;
+}
+
+/* --- 11b. Широкие экраны: контент в колонке 1280, фон полос на всю ширину --- */
+.split,
+.split--reverse,
+.split--reasons,
+.group-row,
+.group-row--flip {
+  padding-inline: max(0px, calc((100% - var(--shell)) / 2));
+}
+
+.split {
+  background: linear-gradient(to right, #101010 0 calc(50% + 213px), var(--pink) calc(50% + 213px) 100%);
+}
+
+.split--reverse,
+.split--reasons {
+  background: linear-gradient(to right, var(--pink) 0 calc(50% - 213px), #101010 calc(50% - 213px) 100%);
+}
+
+.group-row {
+  background: linear-gradient(to right, var(--pink) 0 calc(50% + 213px), #101010 calc(50% + 213px) 100%);
+}
+
+.group-row--flip {
+  background: linear-gradient(to right, #101010 0 calc(50% + 213px), var(--magenta) calc(50% + 213px) 100%);
+}
+
+.plans {
+  padding-inline: max(0px, calc((100% - var(--shell)) / 2));
+  background: var(--pink);
+}
+
+.price-band__inner {
+  position: relative;
+  max-width: var(--shell);
+  margin-inline: auto;
+}
+
+/* --- 12. Планшет (800) ---------------------------------------------------- */
+@media (max-width: 1023px) {
+  .split,
+  .split--reverse,
+  .split--reasons,
+  .group-row,
+  .group-row--flip {
+    background: none;
+  }
+
+  :root {
+    --header-h: 80px;
+    --fs-hero: 11vw;
+    --fs-title-band: 11vw;
+    --fs-h1-page: 11vw;
+    --fs-h2: 3.8vw;
+    --fs-h2-sm: 3.1vw;
+    --fs-cta: 5.6vw;
+    --fs-card: 3.1vw;
+    --fs-item: 2.5vw;
+    --fs-body: 1.9vw;
+    --fs-small: 1.7vw;
+    --fs-nav: 1.7vw;
+    --fs-btn: 1.55vw;
+    --fs-logo: 2vw;
+    --fs-footer-logo: 4.6vw;
+    --fs-footer-head: 2.2vw;
+    --tracking-hero: 0.05em;
+    --pad: 20px;
+  }
+
+  .site-header__inner {
+    padding-left: 68px;
+    padding-right: 36px;
+  }
+
+  .split--about .split__media,
+  .split--style .split__media,
+  .group-media--tall {
+    min-height: 360px;
+  }
+
+  .split--reasons .split__panel,
+  .split--reasons .split__media {
+    min-height: 460px;
+  }
+
+  .cta-band {
+    min-height: 380px;
+  }
+
+  .community {
+    height: 360px;
+  }
+
+  .group-panel {
+    min-height: 360px;
+  }
+
+  .footer__grid {
+    margin-top: 80px;
+  }
+}
+
+/* --- 13. Мобильный (375) -------------------------------------------------- */
+@media (max-width: 767px) {
+  :root {
+    --header-h: 70px;
+    --fs-hero: 8.6vw;
+    --fs-title-band: 8.6vw;
+    --fs-h1-page: 8.8vw;
+    --fs-h2: 7.6vw;
+    --fs-h2-sm: 6.4vw;
+    --fs-cta: 8.6vw;
+    --fs-card: 6.4vw;
+    --fs-item: 6vw;
+    --fs-body: 4.3vw;
+    --fs-small: 3.9vw;
+    --fs-nav: 4vw;
+    --fs-btn: 3.5vw;
+    --fs-logo: 4.4vw;
+    --fs-footer-logo: 9.2vw;
+    --fs-footer-head: 4.8vw;
+    --tracking-hero: 0.06em;
+    --pad: 14px;
+    --lh-body: 1.32;
+  }
+
+  .site-header__inner {
+    padding-left: 68px;
+    padding-right: 35px;
+  }
+
+  .nav,
+  .site-header .btn {
+    display: none;
+  }
+
+  .hero-band {
+    padding-block: 24px 44px;
+  }
+
+  .page-hero {
+    padding-block: 20px 36px;
+  }
+
+  .title-band {
+    padding-block: 14px 10px;
+  }
+
+  .burger {
+    display: block;
+  }
+
+  .mobile-menu[data-open='true'] {
+    display: block;
+  }
+
+  /* одна колонка: медиа и панели идут в порядке макета */
+  .split,
+  .split--reverse,
+  .split--reasons,
+  .group-row,
+  .group-row--flip,
+  .group-kids-band {
+    grid-template-columns: 1fr;
+    padding-inline: 0;
+    background: none;
+  }
+
+  .split--style .split__media {
+    order: -1;
+  }
+
+  .split__media,
+  .split--about .split__media,
+  .split--style .split__media,
+  .split__media--duo,
+  .group-media--tall,
+  .group-media {
+    min-height: 0;
+    height: 60vw;
+  }
+
+  .split__media--duo {
+    height: 56vw;
+  }
+
+  .split--reasons .split__panel,
+  .group-panel {
+    min-height: 0;
+  }
+
+  .split--reasons .split__media {
+    min-height: 0;
+    height: 60vw;
+  }
+
+  .split--about .panel__text {
+    margin-top: 1em;
+  }
+
+  .panel__title,
+  .reasons__title {
+    line-height: 1.02;
+    max-width: none;
+  }
+
+  .reasons__item-title {
+    line-height: 1.1;
+  }
+
+  .cta-band {
+    min-height: 210px;
+    gap: 18px;
+    padding-block: 52px;
+  }
+
+  .community {
+    height: 92vw;
+  }
+
+  .community__title {
+    font-size: 5.6vw;
+    top: 16px;
+  }
+
+  .plans {
+    grid-template-columns: 1fr;
+  }
+
+  .plan {
+    border-left: 0;
+    border-top: 1px solid var(--black);
+    min-height: 0;
+    padding-block: 24px 28px;
+  }
+
+  .plan:first-child {
+    border-top: 0;
+  }
+
+  .plan__title {
+    margin-bottom: 20px;
+  }
+
+  .price-grid {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+
+  .price-band__title {
+    text-align: center;
+  }
+
+  .plan .btn {
+    margin-top: 24px;
+  }
+
+  .footer__grid {
+    grid-template-columns: 1fr;
+    row-gap: 28px;
+    margin-top: 52px;
+  }
+
+  .footer__col--social {
+    text-align: left;
+  }
+
+  .footer__links {
+    align-items: flex-start;
+  }
+
+  .cutout--ira {
+    width: 34%;
+  }
+
+  .cutout--crew {
+    width: 24%;
+  }
+
+  .cutout--mix {
+    width: 26%;
+  }
+
+  .cutout--katya {
+    width: 30%;
+  }
+
+  .cutout--dasha {
+    width: 52%;
+  }
+
+  .sticker--crew {
+    width: 20%;
+    right: 30%;
+  }
+}
+
+
+/* --- 14. Липкая кнопка записи на телефоне --------------------------------- */
+.mobile-cta {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 45;
+  display: none;
+  padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+  background: rgb(252 200 243 / 96%);
+  border-top: 1px solid var(--black);
+  box-shadow: 0 -6px 18px rgb(0 0 0 / 8%);
+}
+
+.mobile-cta .btn {
+  width: 100%;
+  padding-block: 0.85em;
+  font-size: 4vw;
+}
+
+@media (max-width: 767px) {
+  .mobile-cta {
+    display: block;
+  }
+
+  body.has-mobile-cta {
+    padding-bottom: 74px;
+  }
+}
+
+/* --- 15. Кнопка «наверх» -------------------------------------------------- */
+.to-top {
+  position: fixed;
+  right: 14px;
+  bottom: 84px;
+  z-index: 44;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--black);
+  color: var(--white);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+}
+
+.to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.to-top svg {
+  width: 20px;
+  height: 20px;
+}
+
+@media (min-width: 768px) {
+  .to-top {
+    right: 28px;
+    bottom: 28px;
+  }
+}
+
+/* --- 16. Форма записи ----------------------------------------------------- */
+.booking-form {
+  display: grid;
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 5px;
+}
+
+.field > span {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 16px; /* 16px — чтобы iOS не зумил страницу при фокусе */
+  color: var(--black);
+  background: rgb(255 255 255 / 72%);
+  border: 1px solid rgb(0 0 0 / 28%);
+  border-radius: 8px;
+}
+
+.field textarea {
+  min-height: 76px;
+  resize: vertical;
+}
+
+.form-note {
+  font-size: 12.5px;
+  line-height: 1.45;
+  opacity: 0.75;
+}
+
+.form-status {
+  font-size: 14px;
+  min-height: 1.2em;
+}
+
+.form-status[data-state='ok'] {
+  color: #06451f;
+}
+
+.form-status[data-state='error'] {
+  color: #7a0d1e;
+}
+
+.modal__tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.modal__tab {
+  flex: 1;
+  padding: 9px 10px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border: 1px solid rgb(0 0 0 / 30%);
+  border-radius: 8px;
+  background: rgb(255 255 255 / 40%);
+}
+
+.modal__tab[aria-selected='true'] {
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
+}
+
+.modal__pane[hidden] {
+  display: none;
+}
+
+/* --- 17. Галерея ---------------------------------------------------------- */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(6px, 1vw, 12px);
+}
+
+.gallery__item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  aspect-ratio: 4 / 3;
+  background: #101010;
+}
+
+.gallery__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery__item--wide {
+  grid-column: span 2;
+}
+
+.gallery-band {
+  background: var(--white);
+  padding-block: clamp(18px, 2.6vw, 34px);
+}
+
+.gallery-band__title {
+  font-size: var(--fs-cta);
+  line-height: 1;
+  margin-bottom: clamp(12px, 1.8vw, 22px);
+}
+
+@media (max-width: 767px) {
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gallery__item--wide {
+    grid-column: span 2;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* --- 18. Отзывы ----------------------------------------------------------- */
+.reviews {
+  background: var(--pink);
+  padding-block: clamp(24px, 3.4vw, 46px);
+}
+
+.reviews__title {
+  font-size: var(--fs-cta);
+  line-height: 1;
+  margin-bottom: clamp(14px, 2vw, 26px);
+}
+
+.reviews__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(10px, 1.6vw, 20px);
+}
+
+.review {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: clamp(14px, 1.8vw, 22px);
+  background: rgb(255 255 255 / 62%);
+  border-radius: 14px;
+}
+
+.review__text {
+  font-size: var(--fs-small);
+  line-height: 1.45;
+}
+
+.review__author {
+  margin-top: auto;
+  font-size: var(--fs-small);
+  font-weight: 500;
+}
+
+@media (max-width: 1023px) {
+  .reviews__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- 19. Тап-цели на телефоне не меньше 44px ------------------------------ */
+@media (max-width: 767px) {
+  .btn {
+    min-height: 48px;
+  }
+
+  .burger {
+    width: 44px;
+    height: 44px;
+  }
+
+  .logo,
+  .nav__link,
+  .footer__link,
+  .schedule-band__link,
+  .group-panel__nick,
+  .modal__close {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .modal__close {
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+  }
+
+  .footer__links {
+    gap: 4px;
+  }
+}
