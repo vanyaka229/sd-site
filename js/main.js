@@ -101,16 +101,20 @@ var TELEGRAM_SHARE = 'https://t.me/share/url?url=' + encodeURIComponent('https:/
   /* --- Липкая кнопка на телефоне и кнопка «наверх» ---------------------- */
   var mobileCta = document.querySelector('.mobile-cta');
   var toTop = document.querySelector('.to-top');
-  var hero = document.querySelector('.hero-band, .page-hero');
 
-  function onScroll() {
-    var passed = hero ? window.scrollY > hero.offsetHeight + 80 : window.scrollY > 200;
-    if (toTop) toTop.classList.toggle('is-visible', window.scrollY > 600);
+  // Класс has-mobile-cta переключает js/motion.js: кнопка выезжает, когда
+  // герой прокручен. Здесь только страховка, если motion.js не подключён.
+  if (mobileCta && !document.querySelector('.read-progress')) {
+    document.body.classList.add('has-mobile-cta');
+    mobileCta.classList.add('is-visible');
   }
-
-  if (mobileCta) document.body.classList.add('has-mobile-cta');
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  if (toTop && !document.querySelector('.read-progress')) {
+    var fallbackScroll = function () {
+      toTop.classList.toggle('is-visible', window.scrollY > 600);
+    };
+    window.addEventListener('scroll', fallbackScroll, { passive: true });
+    fallbackScroll();
+  }
 
   document.addEventListener('click', function (event) {
     if (event.target.closest('.to-top')) {
@@ -124,6 +128,7 @@ var TELEGRAM_SHARE = 'https://t.me/share/url?url=' + encodeURIComponent('https:/
   if (form) {
     var status = form.querySelector('.form-status');
     var submit = form.querySelector('button[type="submit"]');
+    var DRAFT_KEY = 'sd_booking_draft';
 
     var setStatus = function (text, state) {
       if (!status) return;
@@ -131,6 +136,46 @@ var TELEGRAM_SHARE = 'https://t.me/share/url?url=' + encodeURIComponent('https:/
       if (state) status.setAttribute('data-state', state);
       else status.removeAttribute('data-state');
     };
+
+    /* Черновик: если человек случайно закрыл окно, поля не пропадут.
+       Для сохранённых значений автосохранение отключаем — иначе браузер
+       восстанавливает их уже после того, как мы записали пустые. */
+    var draftReady = false;
+    try {
+      var saved = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
+      if (saved && typeof saved === 'object') {
+        ['name', 'phone', 'comment'].forEach(function (key) {
+          var field = form.elements[key];
+          if (field && saved[key]) field.value = saved[key];
+        });
+        if (saved.group) {
+          var sel = form.elements.group;
+          if (sel) sel.value = saved.group;
+        }
+      }
+    } catch (e) {}
+
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { draftReady = true; });
+    });
+
+    var saveDraft = function () {
+      if (!draftReady) return;
+      try {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({
+          name: form.elements.name ? form.elements.name.value : '',
+          phone: form.elements.phone ? form.elements.phone.value : '',
+          group: form.elements.group ? form.elements.group.value : '',
+          comment: form.elements.comment ? form.elements.comment.value : ''
+        }));
+      } catch (e) {}
+    };
+
+    form.addEventListener('change', saveDraft);
+    form.addEventListener('focusout', saveDraft);
+
+    /* Поле-приманка для ботов: люди его не видят и не заполняют */
+    var honeypot = form.querySelector('[data-honeypot]');
 
     form.addEventListener('submit', function (event) {
       event.preventDefault();
@@ -140,20 +185,34 @@ var TELEGRAM_SHARE = 'https://t.me/share/url?url=' + encodeURIComponent('https:/
       var group = (data.get('group') || '').toString().trim();
       var comment = (data.get('comment') || '').toString().trim();
 
-      if (name.length < 2 || phone.replace(/\D/g, '').length < 10) {
-        setStatus('Проверьте имя и телефон — нужен номер не короче 10 цифр.', 'error');
+      if (honeypot && honeypot.value) return; // бот молча уходит ни с чем
+
+      /* Разметку проверяем сами: у формы стоит novalidate, поэтому сообщение
+         об ошибке всегда видно, а не только во всплывающей подсказке браузера. */
+      var problems = [];
+      if (name.length < 2) problems.push('имя');
+      if (phone.replace(/\D/g, '').length < 10) problems.push('телефон');
+
+      if (problems.length) {
+        form.querySelectorAll('.field').forEach(function (field) {
+          field.classList.remove('is-invalid');
+        });
+        if (name.length < 2) {
+          var nameField = form.elements.name;
+          if (nameField) nameField.closest('.field').classList.add('is-invalid');
+        }
+        if (phone.replace(/\D/g, '').length < 10) {
+          var phoneField = form.elements.phone;
+          if (phoneField) {
+            phoneField.closest('.field').classList.add('is-invalid');
+            if (phoneField.focus) phoneField.focus();
+          }
+        }
+        setStatus('Проверьте ' + problems.join(' и ') + ' — тогда мы сможем перезвонить.', 'error');
         return;
       }
 
       var manual = form.querySelector('.booking-form__manual');
-      var showManual = function (text) {
-        if (manual) {
-          manual.hidden = false;
-          manual.setAttribute('href', TELEGRAM_SHARE + encodeURIComponent(message));
-        }
-        setStatus(text, 'error');
-      };
-
       var lines = [
         'Заявка с сайта SD Dance Studio',
         'Имя: ' + name,
@@ -162,12 +221,27 @@ var TELEGRAM_SHARE = 'https://t.me/share/url?url=' + encodeURIComponent('https:/
         comment ? 'Комментарий: ' + comment : ''
       ].filter(Boolean);
       var message = lines.join('\n');
+
+      var showManual = function (text) {
+        if (manual) {
+          manual.hidden = false;
+          manual.setAttribute('href', TELEGRAM_SHARE + encodeURIComponent(message));
+        }
+        setStatus(text, 'error');
+      };
+
       var endpoint = BOOKING_ENDPOINT || form.getAttribute('data-endpoint');
       var tgReady = TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID;
+
+      /* Отклик сразу, а не после ответа сети: иначе на медленном соединении
+         человек видит прошлый текст и жмёт кнопку второй раз. */
+      setStatus('Отправляем заявку…', 'pending');
 
       var done = function () {
         setStatus('Заявка отправлена! Мы свяжемся с вами, чтобы подтвердить запись.', 'ok');
         form.reset();
+        try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+        if (manual) manual.hidden = true;
       };
 
       if (endpoint) {
@@ -180,7 +254,7 @@ var TELEGRAM_SHARE = 'https://t.me/share/url?url=' + encodeURIComponent('https:/
           if (!r.ok) throw new Error('HTTP ' + r.status);
           done();
         }).catch(function () {
-          setStatus('Не удалось отправить. Напишите нам в Telegram или позвоните.', 'error');
+          showManual('Не получилось подтвердить отправку. Нажмите кнопку ниже — Telegram откроется с готовым текстом заявки, и мы точно её увидим.');
         }).then(function () {
           if (submit) submit.disabled = false;
         });
@@ -192,7 +266,8 @@ var TELEGRAM_SHARE = 'https://t.me/share/url?url=' + encodeURIComponent('https:/
         var last = 0;
         try { last = Number(localStorage.getItem('sd_last_booking') || 0); } catch (e) {}
         if (Date.now() - last < 30000) {
-          setStatus('Заявка уже отправлена. Если нужно — напишите нам в Telegram.', 'error');
+          // защита от дублей: Telegram уже получил такую заявку минуту назад
+          done();
           return;
         }
         var url = 'https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/sendMessage';
@@ -204,8 +279,10 @@ var TELEGRAM_SHARE = 'https://t.me/share/url?url=' + encodeURIComponent('https:/
         // разблокируем кнопку и предлагаем отправить вручную. Гонка промисов
         // срабатывает даже если сам запрос отмену проигнорировал.
         var controller = window.AbortController ? new AbortController() : null;
+        var timedOut = false;
         var guard = new Promise(function (_, reject) {
           setTimeout(function () {
+            timedOut = true;
             if (controller) { try { controller.abort(); } catch (e) {} }
             reject(new Error('timeout'));
           }, 7000);
@@ -230,11 +307,11 @@ var TELEGRAM_SHARE = 'https://t.me/share/url?url=' + encodeURIComponent('https:/
           try { localStorage.setItem('sd_last_booking', String(Date.now())); } catch (e) {}
           done();
         }).catch(function (error) {
-          if (error && error.message === 'timeout') {
-            showManual('Не получилось отправить сразу. Нажмите кнопку ниже — Telegram откроется с готовым текстом.');
-          } else {
-            setStatus('Не удалось отправить. Напишите нам в Telegram или позвоните.', 'error');
-          }
+          // В режиме no-cors ответ прочитать нельзя, поэтому «ошибка сети» не значит,
+          // что заявка не ушла. Не пугаем человека зря: предлагаем продублировать
+          // в Telegram одной кнопкой и не сообщаем о провале.
+          console.log('[SD] отправка в Telegram не подтвердилась:', error && error.message, timedOut ? '(таймаут)' : '(сеть)');
+          showManual('Не получилось подтвердить отправку. Нажмите кнопку ниже — Telegram откроется с готовым текстом заявки, и мы точно её увидим.');
         }).then(function () {
           if (submit) submit.disabled = false;
         });
