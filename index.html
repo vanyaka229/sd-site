@@ -1,13 +1,14 @@
 <!doctype html>
-<html lang="ru">
+<html lang="ru" class="no-js">
 <head>
 <meta charset="utf-8">
+<script>document.documentElement.className = 'js';</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>SD Dance Studio — школа танцев в Ялте: dancehall, dance mix, джемы</title>
 <meta name="description" content="SD Dance Studio — танцевальная школа в Ялте. Dancehall и Female Dancehall, Dance Mix для детей и взрослых, джемы и практики. Первое пробное занятие — 300 ₽. Записывайтесь!">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fcc8f3">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1a1a">
-  <meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111111">
+<meta name="color-scheme" content="light dark">
 <link rel="canonical" href="https://sd-dance-studio.ru/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SD Dance Studio">
@@ -20,185 +21,422 @@
 <link rel="preload" href="assets/fonts/onest-cyrillic-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/motion.css">
 </head>
 <body>
 
+<a class="skip-link" href="#main">Перейти к содержанию</a>
+
+<!-- прогресс чтения страницы -->
+<div class="read-progress" aria-hidden="true"><div class="read-progress__bar"></div></div>
+
+<!-- слой поверх страницы: мягкий прожектор за курсором (только десктоп) -->
+<div class="cursor-layer" aria-hidden="true">
+  <span class="cursor-layer__light"></span>
+  <span class="cursor-layer__ring"></span>
+</div>
+
+<!-- зерно поверх фона: fixed + pointer-events:none, не влияет на скролл -->
+<div class="grain" aria-hidden="true"></div>
+
 <header class="site-header">
   <div class="site-header__inner">
-    <a class="logo" href="index.html">SD Dance Studio</a>
+    <a class="logo" href="index.html"><span class="logo__mark" aria-hidden="true">SD</span>Dance Studio</a>
     <nav class="nav" aria-label="Основная навигация">
       <a class="nav__link" href="#about">О нас</a>
       <a class="nav__link" href="groups.html">Группы</a>
+      <a class="nav__link" href="#schedule">Расписание</a>
+      <a class="nav__link" href="plans.html">Цены</a>
     </nav>
-    <button class="btn btn--magenta" type="button" data-booking>Записаться на занятие</button>
+    <button class="btn btn--magenta" type="button" data-booking data-magnet="0.14">Записаться</button>
     <button class="burger" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Меню">
       <span></span><span></span><span></span>
     </button>
   </div>
   <nav class="mobile-menu" id="mobile-menu" aria-label="Мобильная навигация">
-    <a class="mobile-menu__link" href="#about">О нас</a>
-    <a class="mobile-menu__link" href="groups.html">Группы</a>
-    <a class="mobile-menu__link" href="plans.html">Выбери своё</a>
-    <button class="mobile-menu__link" type="button" data-booking>Записаться</button>
+    <a class="mobile-menu__link" href="#about"><span class="mobile-menu__num">01</span>О нас</a>
+    <a class="mobile-menu__link" href="groups.html"><span class="mobile-menu__num">02</span>Группы</a>
+    <a class="mobile-menu__link" href="plans.html"><span class="mobile-menu__num">03</span>Выбери своё</a>
+    <button class="mobile-menu__link" type="button" data-booking><span class="mobile-menu__num">04</span>Записаться</button>
   </nav>
 </header>
 
-<main>
-  <!-- Заголовок -->
-  <div class="hero-band">
-    <div class="shell">
-      <h1 class="hero-band__title display"><span class="accent">SD</span> Dance Studio</h1>
-    </div>
-  </div>
+<main id="main">
 
-  <!-- О студии -->
-  <section class="split split--about" id="about">
-    <div class="split__media reveal">
-      <img src="assets/img/hero-studio.jpg" width="1708" height="960"
+  <!-- ================= Сцена 01. Герой ================= -->
+  <section class="hero">
+    <div class="hero__media">
+      <img src="assets/img/hero-studio.jpg" width="1708" height="960" fetchpriority="high"
            alt="Групповое занятие в зале SD Dance Studio: ученицы повторяют связку у зеркал">
+      <div class="hero__scrim" aria-hidden="true"></div>
     </div>
-    <div class="split__panel panel--pink">
-      <h2 class="panel__title display reveal">Танцевальная школа в Ялте</h2>
-      <p class="panel__text reveal">Наша студия — это настоящий второй дом для каждого, где тебя ждут
-        поддержка, вдохновляющее комьюнити и свобода быть собой. Приходи к нам и почувствуй этот ритм
-        вместе с нами!</p>
+
+    <div class="hero__inner shell">
+      <div class="hero__meta">
+        <span class="micro">Ялта · школа танцев</span>
+        <span class="hero__badge"><span class="btn__dot" aria-hidden="true"></span>Набор открыт</span>
+      </div>
+
+      <h1 class="hero__title display">
+        <span class="ln"><span class="ln__in">SD Dance</span></span>
+        <span class="ln ln--indent"><span class="ln__in hero__title--outline">Studio</span></span>
+      </h1>
+
+      <div class="hero__bottom">
+        <p class="hero__lead">Танцевальная школа в Ялте: dancehall и female dancehall, dance mix
+          для детей и взрослых, джемы и практики.</p>
+        <div class="hero__actions">
+          <button class="btn btn--magenta btn--lg" type="button" data-booking data-magnet="0.16">Записаться на занятие</button>
+          <a class="btn btn--white btn--outline btn--lg" href="groups.html">Смотреть группы</a>
+        </div>
+      </div>
+
+      <div class="hero__facts">
+        <span class="hero__fact">Пробное занятие — 300 ₽</span>
+        <span class="hero__fact">Дети от 5 лет и взрослые</span>
+        <span class="hero__fact">Аренда зала — 300 / 600 ₽ в час</span>
+      </div>
     </div>
+
+    <span class="hero__scroll" aria-hidden="true">Листай <i></i></span>
   </section>
 
-  <!-- Основной стиль -->
-  <section class="split split--reverse split--style">
-    <div class="split__panel panel--pink">
-      <h2 class="panel__title panel__title--sm display reveal">Основной стиль, который мы танцуем в нашей студии — это
-        <span class="accent">Dancehall</span></h2>
-      <p class="panel__text reveal">Дэнсхолл — это яркая уличная танцевальная культура, зародившаяся на
-        Ямайке в конце 1970-х годов. В этом стиле выделяют два направления: общее (General), построенное
-        на энергичных уличных степах, и женское (Female Dancehall), которое раскрывает пластику, работу
-        бёдер и грацию. Сегодня дэнсхолл покорил весь мир, даря каждому танцору сумасшедшую энергетику и
-        уверенность в своём теле.</p>
+  <!-- ================= Кинетическая лента направлений ================= -->
+  <div class="ticker" aria-label="Направления студии">
+    <div class="ticker__track">
+      <div class="ticker__group">
+        <span class="ticker__item">Dancehall</span>
+        <span class="ticker__item ticker__item--ghost">Female Dancehall</span>
+        <span class="ticker__item">Dance Mix</span>
+        <span class="ticker__item ticker__item--ghost">SD Crew Fam</span>
+        <span class="ticker__item">Джемы</span>
+        <span class="ticker__item ticker__item--ghost">Импровизация</span>
+      </div>
+      <div class="ticker__group" aria-hidden="true">
+        <span class="ticker__item">Dancehall</span>
+        <span class="ticker__item ticker__item--ghost">Female Dancehall</span>
+        <span class="ticker__item">Dance Mix</span>
+        <span class="ticker__item ticker__item--ghost">SD Crew Fam</span>
+        <span class="ticker__item">Джемы</span>
+        <span class="ticker__item ticker__item--ghost">Импровизация</span>
+      </div>
     </div>
-    <div class="split__media split__media--duo reveal">
-      <img src="assets/img/dancehall-girls.jpg" width="852" height="958"
-           alt="Ученицы SD Dance Studio на неоновом свете">
-      <img src="assets/img/hiphop-class.jpg" width="856" height="958"
-           alt="Занятие по dancehall: разминка у зеркал">
-    </div>
-  </section>
-
-  <!-- Полоса с названием -->
-  <div class="title-band" aria-hidden="true">
-    <div class="shell">SD Dance <span class="accent">Studio</span></div>
   </div>
 
-  <!-- Причины -->
-  <section class="split split--reasons">
-    <div class="split__panel panel--pink">
-      <h2 class="reasons__title display reveal">3 причины прийти к нам в студию:</h2>
-      <ol>
-        <li class="reasons__item reveal">
-          <h3 class="reasons__item-title">1. Атмосфера без осуждений</h3>
-          <p class="reasons__item-text">Никакого стеснения и «косых» взглядов, только поддержка, новые
+  <!-- ================= Сцена 02. О студии: липкий рассказ ================= -->
+  <section class="sec band" id="about">
+    <div class="shell">
+      <div class="sec-head">
+        <span class="micro rv">01 / О студии</span>
+        <h2 class="sec-head__title display rv">Второй дом для каждого</h2>
+      </div>
+
+      <div class="story">
+        <figure class="story__media mask-media">
+          <div class="story__media-inner">
+            <img src="assets/img/dance-dark.jpg" width="1708" height="1200"
+                 alt="Ученицы студии на вечерней тренировке">
+          </div>
+          <figcaption>Вечерняя тренировка · Ялта</figcaption>
+        </figure>
+
+        <div class="story__rail">
+          <article class="story__item is-active rv rv--right">
+            <span class="micro">Комьюнити</span>
+            <h3 class="story__item-title display">Поддержка вместо осуждения</h3>
+            <p class="story__item-text">Наша студия — это настоящий второй дом для каждого, где тебя ждут
+              поддержка, вдохновляющее комьюнити и свобода быть собой. Приходи к нам и почувствуй этот
+              ритм вместе с нами!</p>
+          </article>
+
+          <article class="story__item rv rv--right">
+            <span class="micro">Тело</span>
+            <h3 class="story__item-title display">Пластика, бёдра, грация</h3>
+            <p class="story__item-text">Женский дэнсхолл раскрывает пластику, работу бёдер и грацию.
+              Начинаем с базы, постепенно собираем связки и доводим их до танца, а не до набора движений.</p>
+          </article>
+
+          <article class="story__item rv rv--right">
+            <span class="micro">Сцена</span>
+            <h3 class="story__item-title display">Импровизация и джемы</h3>
+            <p class="story__item-text">Мы не только учим хореографии, но и импровизируем — это главный
+              навык для любого танцора. А ещё выступаем на чемпионатах и выезжаем на баттлы.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Сцена 03. Цифры-факты ================= -->
+  <section class="facts band" aria-label="Студия в цифрах">
+    <div class="shell">
+      <div class="facts__grid">
+        <div class="fact">
+          <span class="fact__num display" data-count="2019" data-thousands>2019</span>
+          <span class="fact__label">Год основания студии</span>
+        </div>
+        <div class="fact fact--pink">
+          <span class="fact__num display" data-count="5" data-plus>5+</span>
+          <span class="fact__label">Групп и направлений</span>
+        </div>
+        <div class="fact fact--magenta">
+          <span class="fact__num display" data-count="5" data-plus>5+</span>
+          <span class="fact__label">Возраст, с которого танцуют дети</span>
+        </div>
+        <div class="fact">
+          <span class="fact__num display" data-count="300">300</span>
+          <span class="fact__label">Рублей за пробное занятие</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Сцена 04. Основной стиль ================= -->
+  <section class="sec band">
+    <div class="shell">
+      <div class="sec-head">
+        <span class="micro rv">02 / Направление</span>
+        <h2 class="sec-head__title display rv">Основной стиль — <span class="accent">Dancehall</span></h2>
+      </div>
+
+      <div class="story">
+        <figure class="story__media mask-media">
+          <div class="story__media-inner">
+            <img src="assets/img/groups-hero-class.jpg" width="856" height="960" loading="lazy"
+                 alt="Ученицы SD Dance Studio на занятии по dancehall">
+          </div>
+          <figcaption>Dancehall · разминка у зеркал</figcaption>
+        </figure>
+
+        <div class="story__rail">
+          <article class="story__item is-active rv rv--right">
+            <span class="micro">Ямайка · 1970-е</span>
+            <h3 class="story__item-title display">Уличная культура</h3>
+            <p class="story__item-text">Дэнсхолл — это яркая уличная танцевальная культура, зародившаяся на
+              Ямайке в конце 1970-х годов. Сегодня она покорила весь мир, даря каждому танцору
+              сумасшедшую энергетику и уверенность в своём теле.</p>
+          </article>
+
+          <article class="story__item story__item--pink rv rv--right">
+            <span class="micro">Два направления</span>
+            <h3 class="story__item-title display">General и Female</h3>
+            <p class="story__item-text">В этом стиле выделяют два направления: общее (General), построенное
+              на энергичных уличных степах, и женское (Female Dancehall), которое раскрывает пластику, работу
+              бёдер и грацию.</p>
+          </article>
+
+          <article class="story__item story__item--dark rv rv--right">
+            <span class="micro">Практика</span>
+            <h3 class="story__item-title display">Степы и фристайл</h3>
+            <p class="story__item-text">На тренировках мы разбираем степы разных школ, учим хореографии,
+              фристайлим и готовим номера для чемпионатов.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Сцена 05. Три причины ================= -->
+  <section class="sec band">
+    <div class="shell">
+      <div class="sec-head">
+        <span class="micro rv">03 / Почему мы</span>
+        <h2 class="sec-head__title display rv">3 причины прийти к нам в студию</h2>
+      </div>
+
+      <ol class="rows">
+        <li class="row-item rv">
+          <span class="row-item__num display" aria-hidden="true">1</span>
+          <h3 class="row-item__title display">Атмосфера без осуждений</h3>
+          <p class="row-item__text">Никакого стеснения и «косых» взглядов, только поддержка, новые
             друзья и классные тренера</p>
         </li>
-        <li class="reasons__item reveal">
-          <h3 class="reasons__item-title">2. Группы для любых возрастов</h3>
-          <p class="reasons__item-text">В нашей студии занимаются и маленькие звёздочки от 5 лет, и
+        <li class="row-item rv">
+          <span class="row-item__num display" aria-hidden="true">2</span>
+          <h3 class="row-item__title display">Группы для любых возрастов</h3>
+          <p class="row-item__text">В нашей студии занимаются и маленькие звёздочки от 5 лет, и
             взрослые</p>
         </li>
-        <li class="reasons__item reveal">
-          <h3 class="reasons__item-title">3. Джемы и практики</h3>
-          <p class="reasons__item-text">Мы не только учим хореографии, но и импровизируем, ведь это
+        <li class="row-item rv">
+          <span class="row-item__num display" aria-hidden="true">3</span>
+          <h3 class="row-item__title display">Джемы и практики</h3>
+          <p class="row-item__text">Мы не только учим хореографии, но и импровизируем, ведь это
             главный навык для любого танцора</p>
         </li>
       </ol>
-      <a class="reasons__more" href="groups.html">Группы</a>
-    </div>
-    <div class="split__media reveal">
-      <img src="assets/img/dance-dark.jpg" width="1708" height="1200"
-           alt="Ученицы студии на вечерней тренировке">
-    </div>
-  </section>
 
-  <!-- Расписание -->
-  <section class="schedule-band" id="schedule">
-    <div class="shell schedule-band__inner">
-      <h2 class="schedule-band__title display reveal">Расписание</h2>
-      <a class="schedule-band__link" href="plans.html">Абонементы и стоимость</a>
+      <p style="margin-top: clamp(24px, 3.4vw, 48px)">
+        <a class="btn btn--black btn--lg" href="groups.html" data-magnet="0.14">Все группы студии</a>
+      </p>
     </div>
   </section>
 
-  <section class="plans" aria-label="Расписание групп">
-    <div class="plan panel--pink">
-      <h3 class="plan__title display reveal">Для<br>детей</h3>
-      <div class="plan__rows">
-        <p class="plan__row"><span>Dance mix 6-8 лет</span> <span>пн, ср — 17:00</span></p>
-        <p class="plan__row"><span>Dancehall 10+</span> <span>вт, чт — 17:00; сб — 12-14</span></p>
-        <p class="plan__row"><span>Dance mix 8-12 лет</span> <span>пн, ср — 16:00; сб — 12-14</span></p>
-      </div>
-      <button class="btn btn--magenta btn--block" type="button" data-booking>Записаться на занятие</button>
+  <!-- ================= Сцена 06. Фото во всю ширину + параллакс ================= -->
+  <section class="photoband" aria-label="Импровизация и джемы в студии">
+    <div class="photoband__media">
+      <img src="assets/img/dancehall-girls.jpg" width="852" height="958" loading="lazy" data-parallax="0.16"
+           alt="Ученицы SD Dance Studio на неоновом свете">
     </div>
-
-    <div class="plan panel--pink">
-      <h3 class="plan__title display reveal">Для<br>подростков</h3>
-      <div class="plan__rows">
-        <p class="plan__row"><span>Dance mix 12+</span> <span>вт, чт — 18:00; сб — 16:00</span></p>
-        <p class="plan__row"><span>SD CREW FAM (команда)</span> <span>пн, ср — 18:00; сб — 14-16</span></p>
+    <div class="photoband__scrim" aria-hidden="true"></div>
+    <div class="photoband__inner shell">
+      <h2 class="photoband__title photoband__title--outline display rv rv--mask">Импровизируй</h2>
+      <div class="photoband__foot">
+        <p class="photoband__note rv">Импровизация — главный навык танцора. Поэтому джемы и практики у нас
+          стоят в расписании наравне с хореографией.</p>
+        <button class="btn btn--magenta btn--lg" type="button" data-booking data-magnet="0.16">Записаться на занятие</button>
       </div>
-      <button class="btn btn--magenta btn--block" type="button" data-booking>Записаться на занятие</button>
-    </div>
-
-    <div class="plan panel--pink">
-      <h3 class="plan__title display reveal">Для<br>взрослых</h3>
-      <div class="plan__rows">
-        <p class="plan__row"><span>Female Dancehall 16+</span> <span>пн, ср — 19:00; сб — 11:00</span></p>
-        <p class="plan__row"><span>Female Dancehall 16+ (с нуля)</span> <span>вт, чт — 19:00</span></p>
-      </div>
-      <button class="btn btn--magenta btn--block" type="button" data-booking>Записаться на занятие</button>
     </div>
   </section>
 
-
-  <!-- Галерея -->
-  <section class="gallery-band">
+  <!-- ================= Сцена 07. Расписание ================= -->
+  <section class="sec band" id="schedule">
     <div class="shell">
-      <h2 class="gallery-band__title display reveal">Как у нас проходит</h2>
-      <div class="gallery" data-stagger>
-        <figure class="gallery__item gallery__item--wide reveal">
+      <div class="sec-head">
+        <div class="sec-head__row">
+          <div>
+            <span class="micro rv">04 / Расписание</span>
+            <h2 class="sec-head__title display rv">Когда мы танцуем</h2>
+          </div>
+          <a class="ulink rv" href="plans.html">Абонементы и стоимость</a>
+        </div>
+      </div>
+
+      <div class="sched">
+        <div class="sched__col rv">
+          <span class="sched__idx display" aria-hidden="true">01</span>
+          <h3 class="sched__title display">Для<br>детей</h3>
+          <div class="sched__rows">
+            <p class="sched__row"><b>Dance mix 6-8 лет</b> <span>пн, ср — 17:00</span></p>
+            <p class="sched__row"><b>Dancehall 10+</b> <span>вт, чт — 17:00; сб — 12-14</span></p>
+            <p class="sched__row"><b>Dance mix 8-12 лет</b> <span>пн, ср — 16:00; сб — 12-14</span></p>
+          </div>
+          <button class="btn btn--black btn--block" type="button" data-booking>Записаться на занятие</button>
+        </div>
+
+        <div class="sched__col rv">
+          <span class="sched__idx display" aria-hidden="true">02</span>
+          <h3 class="sched__title display">Для<br>подростков</h3>
+          <div class="sched__rows">
+            <p class="sched__row"><b>Dance mix 12+</b> <span>вт, чт — 18:00; сб — 16:00</span></p>
+            <p class="sched__row"><b>SD CREW FAM (команда)</b> <span>пн, ср — 18:00; сб — 14-16</span></p>
+          </div>
+          <button class="btn btn--black btn--block" type="button" data-booking>Записаться на занятие</button>
+        </div>
+
+        <div class="sched__col rv">
+          <span class="sched__idx display" aria-hidden="true">03</span>
+          <h3 class="sched__title display">Для<br>взрослых</h3>
+          <div class="sched__rows">
+            <p class="sched__row"><b>Female Dancehall 16+</b> <span>пн, ср — 19:00; сб — 11:00</span></p>
+            <p class="sched__row"><b>Female Dancehall 16+ (с нуля)</b> <span>вт, чт — 19:00</span></p>
+          </div>
+          <button class="btn btn--black btn--block" type="button" data-booking>Записаться на занятие</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Сцена 08. Фото-рейл ================= -->
+  <section class="sec band" aria-label="Как проходят занятия">
+    <div class="shell">
+      <div class="sec-head">
+        <span class="micro rv">05 / Как у нас проходит</span>
+        <h2 class="sec-head__title display rv">Зал, свет, музыка</h2>
+      </div>
+    </div>
+
+    <div class="rail" role="region" aria-label="Фоторепортаж со занятий" tabindex="0">
+      <figure class="rail__item rail__item--wide rv mask-media">
+        <img src="assets/img/hero-studio.jpg" width="1708" height="960" loading="lazy"
+             alt="Общее занятие в зале студии">
+        <figcaption class="rail__cap">Общее занятие</figcaption>
+      </figure>
+      <figure class="rail__item rv mask-media">
+        <img src="assets/img/hiphop-class.jpg" width="856" height="958" loading="lazy"
+             alt="Разминка у зеркал">
+        <figcaption class="rail__cap">Разминка</figcaption>
+      </figure>
+      <figure class="rail__item rv mask-media">
+        <img src="assets/img/groups-female-dh.jpg" width="856" height="958" loading="lazy"
+             alt="Female Dancehall: ученицы студии на неоновом свете">
+        <figcaption class="rail__cap">Female Dancehall</figcaption>
+      </figure>
+      <figure class="rail__item rail__item--wide rv mask-media">
+        <img src="assets/img/groups-kids-class.jpg" width="1704" height="960" loading="lazy"
+             alt="Детская группа Dance Mix на занятии">
+        <figcaption class="rail__cap">Dance Mix · дети</figcaption>
+      </figure>
+      <figure class="rail__item rv mask-media">
+        <img src="assets/img/crew-girl.png" width="348" height="584" loading="lazy"
+             alt="Ученица команды SD CREW FAM">
+        <figcaption class="rail__cap">SD Crew Fam</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ================= Сцена 09. Галерея ================= -->
+  <section class="sec band">
+    <div class="shell">
+      <div class="sec-head">
+        <span class="micro rv">06 / Галерея</span>
+        <h2 class="sec-head__title display rv">Как это выглядит</h2>
+      </div>
+
+      <div class="gal">
+        <figure class="gal__item gal__item--a rv mask-media">
           <img src="assets/img/hero-studio.jpg" width="1708" height="960" loading="lazy"
                alt="Общее занятие в зале студии">
         </figure>
-        <figure class="gallery__item reveal">
+        <figure class="gal__item gal__item--b rv mask-media">
           <img src="assets/img/dancehall-girls.jpg" width="852" height="958" loading="lazy"
                alt="Ученицы на неоновом свете">
         </figure>
-        <figure class="gallery__item reveal">
+        <figure class="gal__item gal__item--c rv mask-media">
           <img src="assets/img/hiphop-class.jpg" width="856" height="958" loading="lazy"
                alt="Разминка у зеркал">
         </figure>
-        <figure class="gallery__item reveal">
+        <figure class="gal__item gal__item--d rv mask-media">
           <img src="assets/img/dance-dark.jpg" width="1708" height="1200" loading="lazy"
                alt="Вечерняя тренировка">
-        </figure>
-        <figure class="gallery__item gallery__item--wide reveal">
-          <img src="assets/img/groups-community.jpg" width="2560" height="964" loading="lazy"
-               alt="Команда студии на чемпионате">
         </figure>
       </div>
     </div>
   </section>
 
-  <!-- Призыв -->
-  <section class="cta-band">
-    <h2 class="cta-band__title display reveal">Начни свой путь</h2>
-    <button class="btn btn--white" type="button" data-booking>Записаться на занятие</button>
+  <!-- ================= Комьюнити: панорама во всю ширину ================= -->
+  <section class="community rv" aria-label="Команда студии">
+    <h2 class="visually-hidden">SD Studio — это не просто зал, это большое комьюнити</h2>
+    <img src="assets/img/groups-community.jpg" width="2560" height="964" loading="lazy"
+         alt="Команда SD Dance Studio на чемпионате: надпись «SD Studio — это не просто зал, это большое комьюнити», ученицы и тренеры">
+  </section>
+
+  <!-- ================= Сцена 10. Призыв ================= -->
+  <section class="cta">
+    <div class="cta__grid" aria-hidden="true"></div>
+    <div class="cta__inner shell">
+      <span class="micro rv">07 / Запись</span>
+      <h2 class="cta__title display rv rv--mask">Начни свой путь</h2>
+      <p class="cta__lead rv">Первое занятие — пробное. Приходи, посмотри зал, познакомься с тренером
+        и реши, твоё ли это.</p>
+      <div class="cta__actions rv">
+        <button class="btn btn--black btn--lg" type="button" data-booking data-magnet="0.16">Записаться на занятие</button>
+        <a class="btn btn--outline btn--lg" href="https://t.me/sd_dancestudio" target="_blank" rel="noopener">Написать в Telegram</a>
+      </div>
+      <div class="cta__ticks rv">
+        <span>Пробное занятие — 300 ₽</span>
+        <span>Дети от 5 лет</span>
+        <span>Аренда зала — 300 / 600 ₽</span>
+      </div>
+    </div>
   </section>
 
   <!-- Отзывы: раздел готов, но включаем только с реальными отзывами.
        Пришлите 3 отзыва (текст + имя) — раскомментируйте блок и впишите их.
   <section class="reviews">
     <div class="shell">
-      <h2 class="reviews__title display reveal">Отзывы</h2>
+      <h2 class="reviews__title display rv">Отзывы</h2>
       <div class="reviews__grid" data-stagger>
-        <article class="review reveal">
+        <article class="review rv">
           <p class="review__text">Текст отзыва</p>
           <p class="review__author">Имя, группа</p>
         </article>
@@ -210,7 +448,12 @@
 
 <footer class="site-footer">
   <div class="shell">
-    <div class="site-footer__logo">SD Dance Studio</div>
+    <div class="footer__top">
+      <div class="site-footer__logo">SD Dance Studio</div>
+      <p class="footer__tag">Школа танцев в Ялте. Dancehall, female dancehall, dance mix, джемы
+        и практики — для детей от 5 лет и взрослых.</p>
+    </div>
+
     <div class="footer__grid">
       <div class="footer__col">
         <h3 class="footer__head">Контакты</h3>
@@ -225,14 +468,19 @@
         <p class="footer__text footer__text--muted">Забронировать время можно в тгк:
           <a class="footer__link" href="https://t.me/danceyalta" target="_blank" rel="noopener">danceyalta</a></p>
       </div>
-      <div class="footer__col footer__col--social">
-        <h3 class="footer__head">Соц.<br>сети</h3>
+      <div class="footer__col">
+        <h3 class="footer__head">Соц. сети</h3>
         <div class="footer__links">
           <a class="footer__link" href="https://instagram.com/sd_dancestudio" target="_blank" rel="noopener">Instagram</a>
           <a class="footer__link" href="https://t.me/danceyalta" target="_blank" rel="noopener">ТГК</a>
           <a class="footer__link" href="https://www.tiktok.com/@sd_dancestudio" target="_blank" rel="noopener">TikTok</a>
         </div>
       </div>
+    </div>
+
+    <div class="footer__bottom">
+      <span>Ялта · SD Dance Studio</span>
+      <span>Dancehall · Female Dancehall · Dance Mix</span>
     </div>
   </div>
 </footer>
@@ -251,8 +499,16 @@
     <div class="modal__pane" id="pane-form" role="tabpanel" aria-labelledby="tab-form">
       <!-- Чтобы заявки уходили на почту или в Telegram-бот, впишите адрес приёмника
            в data-endpoint (например, Web3Forms/Formspree). Без него форма открывает
-           Telegram с готовым текстом заявки. -->
-      <form class="booking-form" data-endpoint="">
+           Telegram с готовым текстом заявки.
+           novalidate: разметку проверяет js/main.js, чтобы сообщение об ошибке
+           всегда было видно в самой форме. -->
+      <form class="booking-form" data-endpoint="" novalidate>
+        <!-- приманка для ботов: люди этого поля не видят -->
+        <span class="visually-hidden" aria-hidden="true">
+          <label>Не заполняйте это поле
+            <input type="text" name="company" tabindex="-1" autocomplete="off" data-honeypot>
+          </label>
+        </span>
         <label class="field"><span>Имя</span>
           <input type="text" name="name" autocomplete="name" enterkeyhint="next" required placeholder="Как вас зовут">
         </label>
@@ -307,6 +563,18 @@
   "sameAs": ["https://t.me/sd_dancestudio", "https://instagram.com/sd_dancestudio"]
 }
 </script>
+
+<!-- Просмотр фотографий: клик по кадру в галерее или рейле открывает снимок -->
+<div class="lightbox" id="lightbox" data-open="false" role="dialog" aria-modal="true" aria-label="Просмотр фотографии">
+  <figure class="lightbox__fig">
+    <img class="lightbox__img" src="" alt="">
+    <figcaption class="lightbox__cap"></figcaption>
+  </figure>
+  <button class="lightbox__close" type="button" data-lb-close aria-label="Закрыть просмотр">&times;</button>
+  <button class="lightbox__nav lightbox__nav--prev" type="button" data-lb-prev aria-label="Предыдущее фото">&#8249;</button>
+  <button class="lightbox__nav lightbox__nav--next" type="button" data-lb-next aria-label="Следующее фото">&#8250;</button>
+</div>
+
 <!-- Липкая кнопка записи на телефоне -->
 <div class="mobile-cta">
   <button class="btn btn--magenta" type="button" data-booking>Записаться на занятие</button>
@@ -319,5 +587,6 @@
 </button>
 
 <script src="js/main.js"></script>
+<script src="js/motion.js"></script>
 </body>
 </html>
