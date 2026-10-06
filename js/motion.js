@@ -36,7 +36,24 @@
      Один IntersectionObserver на все .rv и на блоки цифр, с самопрекращением.
      ------------------------------------------------------------------------ */
   var revealItems = [].slice.call(document.querySelectorAll('.rv'));
+  /* .mask-media скрывает фото до появления (opacity:0), но не все такие блоки
+     помечены классом .rv: липкие кадры рассказа (.story__media) его не имеют.
+     Без наблюдателя их фотографии навсегда оставались прозрачными — на месте
+     кадра был чёрный прямоугольник. Берём их в ту же группу появления. */
+  [].slice.call(document.querySelectorAll('.mask-media')).forEach(function (el) {
+    if (revealItems.indexOf(el) === -1) revealItems.push(el);
+  });
   var factBlocks = [].slice.call(document.querySelectorAll('.fact, .offer'));
+
+  /* Что уже видно при загрузке — раскрываем сразу, не ожидая колбэка
+     наблюдателя: у липких блоков он иногда не приходит (округление долей). */
+  function revealAboveFold() {
+    var limit = window.innerHeight + 120;
+    revealItems.forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      if (r.top < limit && r.bottom > -120) el.classList.add('is-in');
+    });
+  }
 
   function showAll() {
     revealItems.forEach(function (el) { el.classList.add('is-in'); });
@@ -55,6 +72,7 @@
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.08 });
 
     revealItems.forEach(function (el) { revealObserver.observe(el); });
+    revealAboveFold();
 
     var blockObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
@@ -70,8 +88,8 @@
   /* ------------------------------------------------------------------------
      Номер 2. Счётчики цифр
      data-count="7"            → 7
-     data-count="2019"         → 2 019 (по-русски, неразрывный пробел)
-     data-count="5" data-plus  → 5+
+     data-count="2026"         → 2 026 (по-русски, неразрывный пробел)
+     data-count="6" data-plus  → 6+
      ------------------------------------------------------------------------ */
   function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 
@@ -134,10 +152,6 @@
   var toTop = document.querySelector('.to-top');
   var hero = document.querySelector('.hero, .page-hero');
   var storyItems = [].slice.call(document.querySelectorAll('.story__item'));
-  var storyMediaInner = document.querySelector('.story__media-inner');
-  var storyMediaSources = storyMediaInner
-    ? [].slice.call(storyMediaInner.querySelectorAll('img'))
-    : [];
 
   /* Параллакс: собираем элементы и их коэффициент один раз */
   var parItems = [];
@@ -190,25 +204,29 @@
       }
     }
 
-    /* Липкий рассказ: какой кадр сейчас читается */
+    /* Липкий рассказ: какой кадр сейчас читается.
+       Активный пункт выбираем по каждому рассказу отдельно — иначе второй
+       рассказ («Основной стиль») вообще не получал активную карточку.
+       Фотографию здесь НЕ трогаем: за неё отвечает .mask-media в motion.css.
+       Раньше здесь выставлялся inline opacity, и фото второго рассказа
+       оставалось прозрачным — на его месте был чёрный прямоугольник. */
     if (storyItems.length) {
       var line = y + headerH + Math.min(window.innerHeight * 0.42, 380);
-      var active = 0;
+      var active = -1;
+      var activeDist = Infinity;
       for (var k = 0; k < storyItems.length; k++) {
-        if (storyItems[k].offsetTop <= line) active = k;
+        var itemRect = storyItems[k].getBoundingClientRect();
+        var itemTop = itemRect.top + y;
+        var itemBottom = itemRect.bottom + y;
+        if (line >= itemTop && line <= itemBottom) { active = k; break; }
+        var dist = line < itemTop ? itemTop - line : line - itemBottom;
+        if (dist < activeDist) { activeDist = dist; active = k; }
       }
       if (active !== lastStory) {
         lastStory = active;
         storyItems.forEach(function (el, idx) {
           el.classList.toggle('is-active', idx === active);
         });
-        if (storyMediaSources.length) {
-          storyMediaSources.forEach(function (img, idx) {
-            var on = idx === active;
-            img.style.opacity = on ? '1' : '0';
-            img.style.transform = on ? 'scale(1)' : 'scale(1.06)';
-          });
-        }
       }
     }
   }
@@ -224,12 +242,12 @@
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', function () { measure(); onScroll(); }, { passive: true });
+  window.addEventListener('resize', function () { measure(); revealAboveFold(); onScroll(); }, { passive: true });
   window.addEventListener('orientationchange', function () { measure(); onScroll(); });
 
   measure();
   onScroll();
-  window.addEventListener('load', function () { measure(); onScroll(); });
+  window.addEventListener('load', function () { measure(); revealAboveFold(); onScroll(); });
 
   /* ------------------------------------------------------------------------
      Номер 4. Курсор-прожектор и магнитные кнопки (только точный указатель)

@@ -905,7 +905,10 @@ ul, ol { padding: 0; list-style: none; }
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  /* число и подпись не должны пересекаться ни на одной ширине */
+  justify-content: flex-start;
+  min-width: 0;
+  gap: clamp(4px, 0.6vw, 10px);
   padding: clamp(24px, 3.4vw, 52px) clamp(18px, 2.2vw, 38px) clamp(28px, 3.6vw, 56px);
   border-left: 1px solid rgb(255 255 255 / 18%);
 }
@@ -916,7 +919,9 @@ ul, ol { padding: 0; list-style: none; }
   font-family: var(--display);
   font-weight: 700;
   font-size: var(--fs-stat);
-  line-height: 0.86;
+  /* 0.86 обрезало строку: у Oswald выносные элементы выше строки, и цифры
+     налезали на подпись. 1.16 вмещает их полностью и остаётся плотным. */
+  line-height: 1.16;
   letter-spacing: -0.01em;
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1;
@@ -1551,6 +1556,8 @@ ul, ol { padding: 0; list-style: none; }
   width: auto;
   max-width: 86%;
   height: auto;
+  /* фигура всегда помещается в панель: раньше при узкой колонке
+     вырезку срезало краем и она «пропадала» */
   max-height: 96%;
   transform: translateX(-50%);
   object-fit: contain;
@@ -1560,15 +1567,8 @@ ul, ol { padding: 0; list-style: none; }
 
 .gpanel--alt .gpanel__media img { max-width: 78%; }
 
-.gpanel__sticker {
-  position: absolute;
-  z-index: 2;
-  right: 8%;
-  top: 10%;
-  width: clamp(56px, 8vw, 118px);
-  opacity: 0.92;
-  pointer-events: none;
-}
+/* Розовая звезда-наклейка убрана по замечанию владельца:
+   правило оставлено пустым, чтобы не терять историю правки. */
 
 .gpanel__tag {
   position: absolute;
