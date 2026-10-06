@@ -1,13 +1,14 @@
 <!doctype html>
-<html lang="ru">
+<html lang="ru" class="no-js">
 <head>
 <meta charset="utf-8">
+<script>document.documentElement.className = 'js';</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Группы SD Dance Studio — dancehall, female dancehall, dance mix в Ялте</title>
 <meta name="description" content="Группы SD Dance Studio в Ялте: SD CREW FAM, Dancehall 10+, Female Dancehall 16+, Dance Mix 6–8, 8–12 и 12+. Тренеры Ира, Катя, Даша и Соня — расписание и запись.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fcc8f3">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1a1a">
-  <meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111111">
+<meta name="color-scheme" content="light dark">
 <link rel="canonical" href="https://sd-dance-studio.ru/groups.html">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Группы SD Dance Studio">
@@ -18,125 +19,265 @@
 <link rel="preload" href="assets/fonts/onest-cyrillic-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/motion.css">
 </head>
 <body>
 
+<a class="skip-link" href="#main">Перейти к содержанию</a>
+
+<div class="read-progress" aria-hidden="true"><div class="read-progress__bar"></div></div>
+
+<div class="cursor-layer" aria-hidden="true">
+  <span class="cursor-layer__light"></span>
+  <span class="cursor-layer__ring"></span>
+</div>
+
+<div class="grain" aria-hidden="true"></div>
+
 <header class="site-header">
   <div class="site-header__inner">
-    <a class="logo" href="index.html">SD Dance Studio</a>
+    <a class="logo" href="index.html"><span class="logo__mark" aria-hidden="true">SD</span>Dance Studio</a>
     <nav class="nav" aria-label="Основная навигация">
       <a class="nav__link" href="index.html#about">О нас</a>
       <a class="nav__link" href="groups.html" aria-current="page">Группы</a>
+      <a class="nav__link" href="index.html#schedule">Расписание</a>
+      <a class="nav__link" href="plans.html">Цены</a>
     </nav>
-    <button class="btn btn--magenta" type="button" data-booking>Записаться на занятие</button>
+    <button class="btn btn--magenta" type="button" data-booking data-magnet="0.14">Записаться</button>
     <button class="burger" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Меню">
       <span></span><span></span><span></span>
     </button>
   </div>
   <nav class="mobile-menu" id="mobile-menu" aria-label="Мобильная навигация">
-    <a class="mobile-menu__link" href="index.html#about">О нас</a>
-    <a class="mobile-menu__link" href="groups.html">Группы</a>
-    <a class="mobile-menu__link" href="plans.html">Выбери своё</a>
-    <button class="mobile-menu__link" type="button" data-booking>Записаться</button>
+    <a class="mobile-menu__link" href="index.html#about"><span class="mobile-menu__num">01</span>О нас</a>
+    <a class="mobile-menu__link" href="groups.html"><span class="mobile-menu__num">02</span>Группы</a>
+    <a class="mobile-menu__link" href="plans.html"><span class="mobile-menu__num">03</span>Выбери своё</a>
+    <button class="mobile-menu__link" type="button" data-booking><span class="mobile-menu__num">04</span>Записаться</button>
   </nav>
 </header>
 
-<main>
-  <div class="page-hero">
+<main id="main">
+
+  <!-- ================= Герой страницы ================= -->
+  <section class="page-hero">
+    <span class="page-hero__index" aria-hidden="true">Группы</span>
     <div class="shell">
-      <h1 class="page-hero__title display">Группы</h1>
+      <div class="page-hero__meta">
+        <span class="micro">Направления и тренеры</span>
+      </div>
+      <h1 class="page-hero__title display">
+        <span class="ln"><span class="ln__in">Группы</span></span>
+      </h1>
+      <p class="page-hero__lead">Пять групп: детские, подростковые и взрослые. Ниже — кто ведёт, что
+        танцуем и как попасть на первое занятие.</p>
+      <div class="page-hero__facts">
+        <span>Ира · Катя · Даша · Соня</span>
+        <span>Дети от 5 лет</span>
+        <span>Есть группа с нуля</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Быстрый переход по тренерам -->
+  <div class="band">
+    <div class="shell">
+      <nav class="jump" aria-label="Быстрый переход">
+        <a href="#trainer-ira">Ира · Dancehall</a>
+        <a href="#trainer-kids">Даша и Соня · дети</a>
+        <a href="#trainer-katya">Катя · Dance Mix</a>
+        <a href="#community">Комьюнити</a>
+      </nav>
     </div>
   </div>
 
-  <!-- Ира: SD CREW FAM, Dancehall 10+, Female DH 16+ -->
-  <section class="group-row">
-    <div class="group-panel panel--pink">
-      <figure class="panel-figure panel-figure--ira">
-        <img src="assets/img/trainer-ira.png" width="510" height="508" alt="Тренер Ира">
-      </figure>
-      <img class="sticker sticker--crew" src="assets/img/star.svg" width="120" height="120" alt="" aria-hidden="true">
-      <div class="gp gp-ira__trainer">
-        <h2 class="group-panel__title display reveal">Тренер: Ира</h2>
-        <a class="group-panel__nick" href="https://instagram.com/sexys.dancer" target="_blank" rel="noopener">@sexys.dancer</a>
+  <!-- ================= Сцена 01. Тренер Ира ================= -->
+  <section class="gpanel" id="trainer-ira">
+    <div class="gpanel__text">
+      <span class="micro rv">01 / Тренер</span>
+      <div class="gpanel__head rv">
+        <h2 class="gpanel__name display">Ира</h2>
+        <a class="gpanel__nick" href="https://instagram.com/sexys.dancer" target="_blank" rel="noopener">@sexys.dancer</a>
       </div>
-      <p class="gp gp-ira__heading group-panel__heading display reveal">Группы: SD CREW FAM, Dancehall 10+, Female DH 16+</p>
-      <p class="gp gp-ira__p1 group-panel__text reveal">В группе <span class="accent">Female Dancehall 16+</span> мы учим
-        степы из женского дэнсхолла, импровизируем, работаем с трясками и учим хореографии</p>
-      <p class="gp gp-ira__p2 group-panel__text reveal"><span class="accent">Dancehall 10+</span>: на тренировках мы
-        танцуем разные школы общего дэнсхолла. Учим степы, фристайлим и выступаем на чемпионатах.</p>
-      <p class="gp gp-ira__p3 group-panel__text reveal">SD CREW FAM — это группа закрытого формата, девочки работают
-        на результат, выезжают на чемпионаты и баттлы</p>
-      <figure class="panel-figure panel-figure--crew">
-        <img src="assets/img/crew-girl.png" width="348" height="584" alt="">
-      </figure>
-    </div>
-    <div class="group-media group-media--tall reveal">
-      <img src="assets/img/groups-hero-class.jpg" width="856" height="960"
-           alt="Ученицы SD Dance Studio на занятии по dancehall">
-    </div>
-  </section>
-
-  <!-- Dance Mix 6-8 лет -->
-  <section class="group-row group-row--flip">
-    <div class="group-media group-media--tall reveal">
-      <img src="assets/img/groups-kids-class.jpg" width="1704" height="960"
-           alt="Детская группа Dance Mix 6–8 лет на занятии">
-    </div>
-    <div class="group-panel panel--magenta group-panel--kids">
-      <figure class="panel-figure panel-figure--dasha">
-        <img src="assets/img/trainers-dasha-sonya.png" width="432" height="514"
-             alt="Тренеры Даша и Соня">
-      </figure>
-      <h2 class="gp gp-kids__title display reveal">Группа: Dance Mix 6-8 лет</h2>
-      <p class="gp gp-kids__lead reveal">Для самых маленьких у нас тоже есть группа!</p>
-      <p class="gp gp-kids__trainers reveal">Тренеры:<br>Даша и Соня<br>
-        <a class="group-panel__nick" href="https://instagram.com/dantex.dance" target="_blank" rel="noopener">@dantex.dance</a>
-        <a class="group-panel__nick" href="https://instagram.com/soyyawww" target="_blank" rel="noopener">@soyyawww</a>
-      </p>
-      <p class="gp gp-kids__note group-panel__text reveal">На тренировках мы учим лёгкие хореографии, которые
-        помогают развивать чувство ритма, координацию и пластичность у детей</p>
-    </div>
-  </section>
-
-  <!-- Катя: Dance Mix 8-12, Dance Mix 12+, Female DH 16+ (с нуля) -->
-  <section class="group-row">
-    <div class="group-panel panel--pink">
-      <figure class="panel-figure panel-figure--katya">
-        <img src="assets/img/trainer-katya.png" width="368" height="616" alt="Тренер Катя">
-      </figure>
-      <figure class="panel-figure panel-figure--mix">
-        <img src="assets/img/mix-girl.png" width="352" height="722" alt="">
-      </figure>
-      <p class="gp gp-katya__heading group-panel__heading display reveal">Группы: Dance Mix 8-12 лет,
-        Dance Mix 12+, Female DH 16+ (с нуля)</p>
-      <p class="gp gp-katya__p1 group-panel__text reveal">В группе <span class="accent">Female Dancehall 16+ (с нуля)</span>
-        мы разбираем базу стиля, учим степы и танцуем хореографии</p>
-      <p class="gp gp-katya__p2 group-panel__text reveal">В группе <span class="accent">Dance Mix 12+</span> мы учим степы
-        из общего дэнсхолла, фристайлим, учим хореографии (дэнсхолл и джаз фанк)</p>
-      <p class="gp gp-katya__p3 group-panel__text reveal"><span class="accent">Dance Mix 8-12 лет</span>: на тренировках мы
-        танцуем степы из разных школ общего дэнсхолла и фристайлим, также выезжаем на чемпионаты</p>
-      <div class="gp gp-katya__trainer">
-        <h3 class="group-panel__title display">Тренер:<br>Катя</h3>
-        <a class="group-panel__nick" href="https://instagram.com/t.katrin_" target="_blank" rel="noopener">@t.katrin_</a>
+      <div class="gpanel__groups rv">
+        <span class="chip chip--solid">SD CREW FAM</span>
+        <span class="chip">Dancehall 10+</span>
+        <span class="chip">Female DH 16+</span>
+      </div>
+      <div class="gpanel__body">
+        <p class="lead rv">В группе <span class="accent">Female Dancehall 16+</span> мы учим степы из
+          женского дэнсхолла, импровизируем, работаем с трясками и учим хореографии</p>
+        <p class="rv"><span class="accent">Dancehall 10+</span>: на тренировках мы танцуем разные школы
+          общего дэнсхолла. Учим степы, фристайлим и выступаем на чемпионатах.</p>
+        <p class="rv">SD CREW FAM — это группа закрытого формата, девочки работают на результат,
+          выезжают на чемпионаты и баттлы</p>
+      </div>
+      <div class="gpanel__foot rv">
+        <button class="btn btn--black" type="button" data-booking data-magnet="0.14">Записаться к Ире</button>
+        <span class="tag">3 группы</span>
       </div>
     </div>
-    <div class="group-media group-media--tall reveal">
-      <img src="assets/img/groups-female-dh.jpg" width="856" height="958"
-           alt="Female Dancehall: ученицы студии на неоновом свете">
+
+    <div class="gpanel__media rv rv--scale mask-media">
+      <img src="assets/img/trainer-ira.png" width="510" height="508" loading="lazy" data-parallax="0.07" alt="Тренер Ира">
+      <img class="gpanel__sticker" src="assets/img/star.svg" width="120" height="120" alt="" aria-hidden="true">
+      <span class="gpanel__tag">Female Dancehall</span>
     </div>
   </section>
 
-  <!-- Комьюнити: надпись вшита в фотографию из макета, поэтому здесь только скрытый заголовок -->
-  <section class="community">
+  <!-- ================= Сцена 02. Детская группа ================= -->
+  <section class="gpanel gpanel--alt gpanel--magenta" id="trainer-kids">
+    <div class="gpanel__text">
+      <span class="micro rv">02 / Детская группа</span>
+      <div class="gpanel__head rv">
+        <h2 class="gpanel__name display">Dance Mix 6-8</h2>
+      </div>
+      <div class="gpanel__groups rv">
+        <span class="chip chip--solid">Дети 6-8 лет</span>
+        <span class="chip">Даша</span>
+        <span class="chip">Соня</span>
+      </div>
+      <div class="gpanel__body">
+        <p class="lead rv">Для самых маленьких у нас тоже есть группа! Тренеры: Даша и Соня</p>
+        <p class="rv">На тренировках мы учим лёгкие хореографии, которые помогают развивать чувство ритма,
+          координацию и пластичность у детей</p>
+      </div>
+      <div class="gpanel__foot rv">
+        <button class="btn btn--black" type="button" data-booking data-magnet="0.14">Записать ребёнка</button>
+        <a class="gpanel__nick" href="https://instagram.com/dantex.dance" target="_blank" rel="noopener">@dantex.dance</a>
+        <a class="gpanel__nick" href="https://instagram.com/soyyawww" target="_blank" rel="noopener">@soyyawww</a>
+      </div>
+    </div>
+
+    <div class="gpanel__media rv rv--scale mask-media">
+      <img src="assets/img/trainers-dasha-sonya.png" width="432" height="514" loading="lazy"
+           data-parallax="0.07" alt="Тренеры Даша и Соня">
+      <span class="gpanel__tag">Dance Mix · дети</span>
+    </div>
+  </section>
+
+  <!-- ================= Сцена 03. Тренер Катя ================= -->
+  <section class="gpanel" id="trainer-katya">
+    <div class="gpanel__text">
+      <span class="micro rv">03 / Тренер</span>
+      <div class="gpanel__head rv">
+        <h2 class="gpanel__name display">Катя</h2>
+        <a class="gpanel__nick" href="https://instagram.com/t.katrin_" target="_blank" rel="noopener">@t.katrin_</a>
+      </div>
+      <div class="gpanel__groups rv">
+        <span class="chip chip--solid">Dance Mix 8-12 лет</span>
+        <span class="chip">Dance Mix 12+</span>
+        <span class="chip">Female DH 16+ (с нуля)</span>
+      </div>
+      <div class="gpanel__body">
+        <p class="lead rv">В группе <span class="accent">Female Dancehall 16+ (с нуля)</span> мы разбираем
+          базу стиля, учим степы и танцуем хореографии</p>
+        <p class="rv">В группе <span class="accent">Dance Mix 12+</span> мы учим степы из общего дэнсхолла,
+          фристайлим, учим хореографии (дэнсхолл и джаз фанк)</p>
+        <p class="rv"><span class="accent">Dance Mix 8-12 лет</span>: на тренировках мы танцуем степы из
+          разных школ общего дэнсхолла и фристайлим, также выезжаем на чемпионаты</p>
+      </div>
+      <div class="gpanel__foot rv">
+        <button class="btn btn--black" type="button" data-booking data-magnet="0.14">Записаться к Кате</button>
+        <span class="tag">3 группы</span>
+      </div>
+    </div>
+
+    <div class="gpanel__media rv rv--scale mask-media">
+      <img src="assets/img/trainer-katya.png" width="368" height="616" loading="lazy" data-parallax="0.07" alt="Тренер Катя">
+      <span class="gpanel__tag">Dance Mix</span>
+    </div>
+  </section>
+
+  <!-- ================= Кинетическая лента ================= -->
+  <div class="ticker ticker--dark ticker--rev" aria-label="Группы студии">
+    <div class="ticker__track">
+      <div class="ticker__group">
+        <span class="ticker__item">SD Crew Fam</span>
+        <span class="ticker__item ticker__item--ghost">Dancehall 10+</span>
+        <span class="ticker__item">Dance Mix 8-12</span>
+        <span class="ticker__item ticker__item--ghost">Dance Mix 12+</span>
+        <span class="ticker__item">Female DH 16+</span>
+        <span class="ticker__item ticker__item--ghost">С нуля</span>
+      </div>
+      <div class="ticker__group" aria-hidden="true">
+        <span class="ticker__item">SD Crew Fam</span>
+        <span class="ticker__item ticker__item--ghost">Dancehall 10+</span>
+        <span class="ticker__item">Dance Mix 8-12</span>
+        <span class="ticker__item ticker__item--ghost">Dance Mix 12+</span>
+        <span class="ticker__item">Female DH 16+</span>
+        <span class="ticker__item ticker__item--ghost">С нуля</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Фото-рейл ================= -->
+  <section class="sec band">
+    <div class="shell">
+      <div class="sec-head">
+        <span class="micro rv">04 / Как проходит</span>
+        <h2 class="sec-head__title display rv">Разминка, степы, фристайл</h2>
+      </div>
+    </div>
+
+    <div class="rail" role="region" aria-label="Фоторепортаж с занятий" tabindex="0">
+      <figure class="rail__item rail__item--wide rv mask-media">
+        <img src="assets/img/groups-hero-class.jpg" width="856" height="960" loading="lazy"
+             alt="Ученицы SD Dance Studio на занятии по dancehall">
+        <figcaption class="rail__cap">Dancehall 10+</figcaption>
+      </figure>
+      <figure class="rail__item rv mask-media">
+        <img src="assets/img/groups-kids-class.jpg" width="1704" height="960" loading="lazy"
+             alt="Детская группа Dance Mix 6–8 лет на занятии">
+        <figcaption class="rail__cap">Dance Mix 6-8</figcaption>
+      </figure>
+      <figure class="rail__item rv mask-media">
+        <img src="assets/img/groups-female-dh.jpg" width="856" height="958" loading="lazy"
+             alt="Female Dancehall: ученицы студии на неоновом свете">
+        <figcaption class="rail__cap">Female Dancehall</figcaption>
+      </figure>
+      <figure class="rail__item rail__item--wide rv mask-media">
+        <img src="assets/img/hero-studio.jpg" width="1708" height="960" loading="lazy"
+             alt="Общее занятие в зале студии">
+        <figcaption class="rail__cap">Общее занятие</figcaption>
+      </figure>
+      <figure class="rail__item rv mask-media">
+        <img src="assets/img/mix-girl.png" width="352" height="722" loading="lazy"
+             alt="Ученица группы Dance Mix">
+        <figcaption class="rail__cap">Dance Mix</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ================= Комьюнити ================= -->
+  <section class="community rv" id="community">
     <h2 class="visually-hidden">SD Studio — это не просто зал, это большое комьюнити</h2>
-    <img src="assets/img/groups-community.jpg" width="2560" height="964"
+    <img src="assets/img/groups-community.jpg" width="2560" height="964" loading="lazy"
          alt="Команда SD Dance Studio на чемпионате: надпись «SD Studio — это не просто зал, это большое комьюнити», ученицы и тренеры">
+  </section>
+
+  <section class="cta">
+    <div class="cta__grid" aria-hidden="true"></div>
+    <div class="cta__inner shell">
+      <span class="micro rv">05 / Запись</span>
+      <h2 class="cta__title display rv rv--mask">Выбери свою группу</h2>
+      <p class="cta__lead rv">Не знаете, что подойдёт по возрасту и уровню? Напишите — подберём
+        и пригласим на пробное занятие.</p>
+      <div class="cta__actions rv">
+        <button class="btn btn--black btn--lg" type="button" data-booking data-magnet="0.16">Записаться на занятие</button>
+        <a class="btn btn--outline btn--lg" href="plans.html">Расписание и цены</a>
+      </div>
+    </div>
   </section>
 </main>
 
 <footer class="site-footer">
   <div class="shell">
-    <div class="site-footer__logo">SD Dance Studio</div>
+    <div class="footer__top">
+      <div class="site-footer__logo">SD Dance Studio</div>
+      <p class="footer__tag">Школа танцев в Ялте. Dancehall, female dancehall, dance mix, джемы
+        и практики — для детей от 5 лет и взрослых.</p>
+    </div>
+
     <div class="footer__grid">
       <div class="footer__col">
         <h3 class="footer__head">Контакты</h3>
@@ -151,14 +292,19 @@
         <p class="footer__text footer__text--muted">Забронировать время можно в тгк:
           <a class="footer__link" href="https://t.me/danceyalta" target="_blank" rel="noopener">danceyalta</a></p>
       </div>
-      <div class="footer__col footer__col--social">
-        <h3 class="footer__head">Соц.<br>сети</h3>
+      <div class="footer__col">
+        <h3 class="footer__head">Соц. сети</h3>
         <div class="footer__links">
           <a class="footer__link" href="https://instagram.com/sd_dancestudio" target="_blank" rel="noopener">Instagram</a>
           <a class="footer__link" href="https://t.me/danceyalta" target="_blank" rel="noopener">ТГК</a>
           <a class="footer__link" href="https://www.tiktok.com/@sd_dancestudio" target="_blank" rel="noopener">TikTok</a>
         </div>
       </div>
+    </div>
+
+    <div class="footer__bottom">
+      <span>Ялта · SD Dance Studio</span>
+      <span>Dancehall · Female Dancehall · Dance Mix</span>
     </div>
   </div>
 </footer>
@@ -176,8 +322,16 @@
     <div class="modal__pane" id="pane-form" role="tabpanel" aria-labelledby="tab-form">
       <!-- Чтобы заявки уходили на почту или в Telegram-бот, впишите адрес приёмника
            в data-endpoint (например, Web3Forms/Formspree). Без него форма открывает
-           Telegram с готовым текстом заявки. -->
-      <form class="booking-form" data-endpoint="">
+           Telegram с готовым текстом заявки.
+           novalidate: разметку проверяет js/main.js, чтобы сообщение об ошибке
+           всегда было видно в самой форме. -->
+      <form class="booking-form" data-endpoint="" novalidate>
+        <!-- приманка для ботов: люди этого поля не видят -->
+        <span class="visually-hidden" aria-hidden="true">
+          <label>Не заполняйте это поле
+            <input type="text" name="company" tabindex="-1" autocomplete="off" data-honeypot>
+          </label>
+        </span>
         <label class="field"><span>Имя</span>
           <input type="text" name="name" autocomplete="name" enterkeyhint="next" required placeholder="Как вас зовут">
         </label>
@@ -221,6 +375,17 @@
   </div>
 </div>
 
+<!-- Просмотр фотографий: клик по кадру в рейле открывает снимок -->
+<div class="lightbox" id="lightbox" data-open="false" role="dialog" aria-modal="true" aria-label="Просмотр фотографии">
+  <figure class="lightbox__fig">
+    <img class="lightbox__img" src="" alt="">
+    <figcaption class="lightbox__cap"></figcaption>
+  </figure>
+  <button class="lightbox__close" type="button" data-lb-close aria-label="Закрыть просмотр">&times;</button>
+  <button class="lightbox__nav lightbox__nav--prev" type="button" data-lb-prev aria-label="Предыдущее фото">&#8249;</button>
+  <button class="lightbox__nav lightbox__nav--next" type="button" data-lb-next aria-label="Следующее фото">&#8250;</button>
+</div>
+
 <!-- Липкая кнопка записи на телефоне -->
 <div class="mobile-cta">
   <button class="btn btn--magenta" type="button" data-booking>Записаться на занятие</button>
@@ -233,5 +398,6 @@
 </button>
 
 <script src="js/main.js"></script>
+<script src="js/motion.js"></script>
 </body>
 </html>
