@@ -181,7 +181,8 @@
 [data-parallax] { will-change: transform; }
 
 /* Картинка внутри полосы чуть больше полосы, чтобы было куда двигаться */
-.photoband__media img,
+.photoband__bg,
+.photoband__shot img,
 .gpanel__media img,
 .photorail-fallback img { backface-visibility: hidden; }
 
@@ -380,6 +381,13 @@
 
   .hero__media { clip-path: none !important; transition: none !important; }
   .hero__media img { transform: none !important; opacity: 1 !important; transition: none !important; }
+  /* Резкий кадр героя и полосы тоже появляется без движения */
+  .hero__shot,
+  .photoband__shot {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 
   /* Ленты стоят на месте */
   .ticker__track {

@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="SD Dance Studio">
 <meta property="og:title" content="SD Dance Studio — школа танцев в Ялте">
 <meta property="og:description" content="Dancehall, Female Dancehall и Dance Mix в Ялте. Танцуем, импровизируем и выступаем на чемпионатах.">
-<meta property="og:image" content="assets/img/hero-studio.jpg">
+<meta property="og:image" content="assets/img/hero-hall.jpg">
 <meta property="og:locale" content="ru_RU">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/oswald-cyrillic-700.woff2" as="font" type="font/woff2" crossorigin>
@@ -65,13 +65,32 @@
 
   <!-- ================= Сцена 01. Герой ================= -->
   <section class="hero">
+    <!-- Фон: тот же кадр, но намеренно мягкий — это глубина резкости, а не брак.
+         Слот 1706 px не тянет полноэкранный фон, поэтому резкая версия живёт
+         отдельным кадром (ниже) и не превышает своей натуральной ширины. -->
     <div class="hero__media">
-      <img src="assets/img/hero-studio.jpg" width="1708" height="734" fetchpriority="high" decoding="async"
-           alt="Групповое занятие в зале SD Dance Studio: ученицы повторяют связку у зеркал">
+      <img class="hero__bg" src="assets/img/hero-hall-blur.jpg" width="1280" height="720"
+           fetchpriority="high" decoding="async" alt="" aria-hidden="true">
       <div class="hero__scrim" aria-hidden="true"></div>
     </div>
 
     <div class="hero__inner shell">
+      <!-- Резкий кадр героя. Ширина слота — правая колонка (<= 850 CSS px),
+           это вдвое меньше натуральной ширины кадра 1340/1706 px. -->
+      <figure class="hero__shot">
+        <picture>
+          <source media="(max-width: 700px)"
+                  srcset="assets/img/hero-studio.jpg 750w">
+          <source media="(max-width: 940px)"
+                  srcset="assets/img/hero-hall-1340.jpg 1340w, assets/img/hero-hall.jpg 1706w">
+          <source sizes="(max-width: 1179px) 94vw, (max-width: 1600px) 48vw, 45vw"
+                  srcset="assets/img/hero-hall-1340.jpg 1340w, assets/img/hero-hall.jpg 1706w">
+          <img src="assets/img/hero-hall-1340.jpg" width="1340" height="754" fetchpriority="high" decoding="async"
+               alt="Групповое занятие в зале SD Dance Studio: ученицы повторяют связку у зеркал">
+        </picture>
+        <figcaption>Общее занятие · Ялта</figcaption>
+      </figure>
+
       <div class="hero__meta">
         <span class="micro">Ялта · школа танцев</span>
         <span class="hero__badge"><span class="btn__dot" aria-hidden="true"></span>Набор открыт</span>
@@ -274,10 +293,17 @@
   <!-- ================= Сцена 06. Фото во всю ширину + параллакс ================= -->
   <section class="photoband" aria-label="Импровизация и джемы в студии">
     <div class="photoband__media">
-      <img src="assets/img/dancehall-girls.jpg" width="852" height="958" loading="lazy" data-parallax="0.16"
-           alt="Ученицы SD Dance Studio на неоновом свете">
+      <!-- фон полосы: крупные мягкие пятна света. Исходник 854x960 при полной
+           ширине требует вчетверо больше пикселей, поэтому мягкость — приём. -->
+      <img class="photoband__bg" src="assets/img/dancehall-girls.jpg" width="854" height="960"
+           loading="lazy" alt="" aria-hidden="true">
+      <div class="photoband__scrim" aria-hidden="true"></div>
     </div>
-    <div class="photoband__scrim" aria-hidden="true"></div>
+    <!-- резкий кадр полосы: тот же исходник, но не шире своей натуральной ширины -->
+    <figure class="photoband__shot" aria-label="Ученицы SD Dance Studio на неоновом свете">
+      <img src="assets/img/dancehall-girls.jpg" width="854" height="960" loading="lazy"
+           data-parallax="0.16" alt="Ученицы SD Dance Studio на неоновом свете">
+    </figure>
     <div class="photoband__inner shell">
       <h2 class="photoband__title photoband__title--outline display rv rv--mask">Импровизируй</h2>
       <div class="photoband__foot">
@@ -347,7 +373,7 @@
 
     <div class="rail" role="region" aria-label="Фоторепортаж со занятий" tabindex="0">
       <figure class="rail__item rail__item--wide rv mask-media">
-        <img src="assets/img/hero-studio.jpg" width="1708" height="734" loading="lazy"
+        <img src="assets/img/hero-studio.jpg" width="750" height="450" loading="lazy"
              alt="Общее занятие в зале студии">
         <figcaption class="rail__cap">Общее занятие</figcaption>
       </figure>
@@ -357,7 +383,7 @@
         <figcaption class="rail__cap">Разминка</figcaption>
       </figure>
       <figure class="rail__item rv mask-media">
-        <img src="assets/img/groups-female-dh.jpg" width="856" height="958" loading="lazy"
+        <img src="assets/img/groups-female-dh.jpg" width="800" height="750" loading="lazy"
              alt="Female Dancehall: ученицы студии на неоновом свете">
         <figcaption class="rail__cap">Female Dancehall</figcaption>
       </figure>
@@ -379,11 +405,11 @@
 
       <div class="gal">
         <figure class="gal__item gal__item--a rv mask-media">
-          <img src="assets/img/hero-studio.jpg" width="1708" height="734" loading="lazy"
+          <img src="assets/img/hero-studio.jpg" width="750" height="450" loading="lazy"
                alt="Общее занятие в зале студии">
         </figure>
         <figure class="gal__item gal__item--b rv mask-media">
-          <img src="assets/img/dancehall-girls.jpg" width="852" height="958" loading="lazy"
+          <img src="assets/img/dancehall-girls.jpg" width="854" height="960" loading="lazy"
                alt="Ученицы на неоновом свете">
         </figure>
         <figure class="gal__item gal__item--c rv mask-media">

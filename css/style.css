@@ -291,7 +291,7 @@ ul, ol { padding: 0; list-style: none; }
   inset: 0;
   z-index: 90;
   pointer-events: none;
-  opacity: 0.045;
+  opacity: 0.055;
   mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
 }
@@ -558,38 +558,109 @@ ul, ol { padding: 0; list-style: none; }
   overflow: hidden;
 }
 
-.hero__media img {
+/* Фон героя: тот же кадр, но намеренно мягкий. Резкость на полной ширине
+   невозможна (1706 px исходника против 3800+ нужных на retina), поэтому
+   мягкость сделана приёмом: расфокус + маджента-градиент = глубина резкости. */
+.hero__bg {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: 50% 38%;
+  filter: blur(14px) saturate(1.12) brightness(0.86);
   transform: scale(1.14);
   opacity: 0;
   transition: transform 1.6s var(--ease-out), opacity 1s ease;
 }
 
-.is-ready .hero__media img { transform: scale(1); opacity: 1; }
+.is-ready .hero__bg { transform: scale(1); opacity: 1; }
+
+/* Резкий кадр героя. Ширина слота ограничена натуральной шириной кадра:
+   при 2x это максимум 850 CSS px — здесь 670 px, то есть с запасом. */
+/* Резкий кадр героя. Правило: слот не шире своих пикселей / 2.
+   Кадр занимает правую колонку целиком — под него уходит и вертикаль заголовка,
+   поэтому кадр получается крупным, но не растянутым. */
+.hero__shot {
+  position: relative;
+  z-index: 1;
+  grid-column: 2;
+  grid-row: 2 / 5;
+  align-self: end;
+  width: 100%;
+  margin: 0;
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition: opacity 0.9s ease, transform 1.1s var(--ease-out);
+  transition-delay: 0.22s;
+  /* подпись кадра крепится к самому кадру на всех ширинах */
+  position: relative;
+}
+
+.is-ready .hero__shot { opacity: 1; transform: none; }
+
+.hero__shot picture { display: block; }
+
+.hero__shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Кадр не выше 420 px, хотя исходник позволяет больше: герой по высоте
+     ограничен экраном, и вертикальный бюджет отдан типографике. */
+  max-height: 420px;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: 50% 48%;
+  /* тень отделяет резкий кадр от размытого фона: приём читается как глубина */
+  box-shadow: 0 30px 90px rgb(0 0 0 / 55%);
+}
+
+.hero__shot figcaption {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 8px 13px;
+  background: rgb(0 0 0 / 68%);
+  color: var(--white);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
 
 .hero__scrim {
   position: absolute;
   inset: 0;
+  /* Маджента-градиент даёт глубину: фон уходит на второй план, резкий кадр читается */
   background:
-    linear-gradient(180deg, rgb(11 11 11 / 62%) 0%, rgb(11 11 11 / 22%) 34%, rgb(11 11 11 / 93%) 100%),
-    linear-gradient(96deg, rgb(11 11 11 / 74%) 0%, rgb(11 11 11 / 6%) 62%);
+    linear-gradient(180deg, rgb(11 11 11 / 56%) 0%, rgb(11 11 11 / 14%) 36%, rgb(11 11 11 / 84%) 100%),
+    linear-gradient(96deg, rgb(11 11 11 / 76%) 0%, rgb(11 11 11 / 4%) 64%);
 }
 
 .hero__scrim::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(120% 90% at 12% 84%, rgb(251 18 162 / 26%) 0%, transparent 62%);
+  background: radial-gradient(120% 90% at 14% 86%, rgb(251 18 162 / 34%) 0%, transparent 64%);
 }
 
 .hero__inner {
   position: relative;
   z-index: 2;
   width: 100%;
+  /* Раскладка героя: слева типографика, справа резкий кадр.
+     align-content:end прижимает сцену к низу — низ героя держится на любой высоте. */
+  display: grid;
+  grid-template-columns: minmax(0, 5.4fr) minmax(0, 5.6fr);
+  gap: 0 clamp(24px, 4vw, 72px);
+  align-content: end;
 }
+
+.hero__meta { grid-column: 1 / -1; grid-row: 1; }
+.hero__title { grid-column: 1; grid-row: 2; }
+/* .hero__bottom разворачивается в сетку героя: подпись и кнопки идут под
+   заголовком в левой колонке, а резкий кадр занимает правую колонку целиком */
+.hero__bottom { display: contents; }
+.hero__lead { grid-column: 1; grid-row: 3; align-self: end; }
+.hero__actions { grid-column: 1; grid-row: 4; align-self: end; }
+.hero__facts { grid-column: 1 / -1; grid-row: 5; }
 
 .hero__meta {
   display: flex;
@@ -640,10 +711,61 @@ ul, ol { padding: 0; list-style: none; }
 }
 
 .hero__lead {
-  max-width: 29ch;
+  max-width: 34ch;
   font-size: var(--fs-lead);
   line-height: 1.42;
   color: rgb(255 255 255 / 86%);
+}
+
+/* --- 08b. Герой: двухколоночная раскладка (текст слева, резкий кадр справа) -- */
+@media (min-width: 1180px) {
+  /* В двухколоночном герое строка заголовка не должна выйти из своей колонки:
+     ограничиваем кегль её шириной (грузовик Oswald ~0.62em на знак). */
+  :root { --fs-hero-col: clamp(46px, 6.6vw, 152px); }
+
+  .hero__title {
+    font-size: min(var(--fs-hero), var(--fs-hero-col));
+    max-width: 18ch;
+  }
+}
+
+@media (max-width: 1179px) {
+  /* одна колонка: кадр встаёт в поток сразу под заголовком, во всю ширину */
+  .hero__inner { grid-template-columns: minmax(0, 1fr); }
+
+  .hero__shot {
+    display: block;
+    grid-column: 1;
+    grid-row: 3;
+    width: 100%;
+    max-width: 820px;
+    margin: clamp(18px, 3vh, 30px) auto 0;
+    aspect-ratio: 16 / 9;
+  }
+
+  /* в потоке кадр снова горизонтальный — вертикальная обрезка 3:4 не нужна,
+     а потолок высоты снимаем: её задаёт формат 16:9 */
+  .hero__shot img {
+    max-height: none;
+    height: 100%;
+    aspect-ratio: 16 / 9;
+    object-position: 50% 42%;
+  }
+
+  /* подпись и кнопки снова живут в одном блоке под кадром */
+  .hero__bottom {
+    display: flex;
+    grid-column: 1;
+    grid-row: 4;
+  }
+
+  .hero__lead { align-self: auto; }
+  .hero__facts { grid-column: 1; grid-row: 5; }
+}
+
+@media (max-width: 700px) {
+  /* на телефоне кадр под заголовком идёт в мягком формате 16:10 */
+  .hero__shot { aspect-ratio: 16 / 10; }
 }
 
 .hero__actions {
@@ -988,7 +1110,10 @@ ul, ol { padding: 0; list-style: none; }
 /* --- 14. Фото во всю ширину + параллакс ------------------------------------ */
 .photoband {
   position: relative;
-  min-height: clamp(280px, 62vw, 780px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: clamp(420px, 62vw, 780px);
   overflow: hidden;
   background: var(--coal);
   color: var(--white);
@@ -1000,27 +1125,69 @@ ul, ol { padding: 0; list-style: none; }
   overflow: hidden;
 }
 
-.photoband__media img {
+/* Фон полосы намеренно размыт: кадр 854x960 не тянет полную ширину,
+   поэтому мягкость читается как глубина резкости, а не как брак. */
+.photoband__bg {
   width: 100%; height: 100%;
   object-fit: cover;
-  will-change: transform;
+  object-position: 50% 34%;
+  filter: blur(18px) saturate(1.1) brightness(0.82);
+  transform: scale(1.08);
 }
 
 .photoband__scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgb(11 11 11 / 58%) 0%, rgb(11 11 11 / 14%) 45%, rgb(11 11 11 / 76%) 100%);
+  background: linear-gradient(180deg, rgb(11 11 11 / 52%) 0%, rgb(11 11 11 / 12%) 45%, rgb(11 11 11 / 72%) 100%);
 }
 
+/* Резкий кадр полосы: своя колонка, ширина не выше натуральной (854 px) */
+.photoband__shot {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 854px);
+  aspect-ratio: 4 / 5;
+  margin: 0;
+  overflow: hidden;
+  box-shadow: 0 30px 90px rgb(0 0 0 / 45%);
+}
+
+.photoband__shot img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+}
+
+/* Полоса: во всю ширину идёт размытая версия кадра, поверх неё — резкий кадр
+   в своём натуральном размере. Слева типографика, внизу подпись. */
 .photoband__inner {
   position: relative;
   z-index: 2;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: clamp(60px, 16vw, 200px);
+  justify-content: center;
+  gap: clamp(24px, 4vh, 52px);
   min-height: inherit;
   padding-block: clamp(26px, 4vw, 58px);
+}
+
+/* Резкий кадр полосы: своя колонка, ширина не выше натуральной (854 px).
+   Формат 4:3 близок к исходникам полос (1708x1200 и 854x960) — кадр почти не режется. */
+.photoband__shot {
+  position: relative;
+  z-index: 2;
+  align-self: flex-end;
+  width: min(100%, 640px);
+  aspect-ratio: 4 / 3;
+  margin: 0;
+  overflow: hidden;
+  box-shadow: 0 30px 90px rgb(0 0 0 / 45%);
+}
+
+.photoband__shot img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
 }
 
 .photoband__title {
@@ -1139,7 +1306,7 @@ ul, ol { padding: 0; list-style: none; }
   background: var(--coal);
 }
 
-.rail__item--wide { width: clamp(300px, 82vw, 620px); aspect-ratio: 16 / 10; }
+.rail__item--wide { width: clamp(300px, 82vw, 912px); aspect-ratio: 16 / 9; }
 
 .rail__item img {
   width: 100%; height: 100%;
@@ -1184,7 +1351,7 @@ ul, ol { padding: 0; list-style: none; }
   transition: transform 0.8s var(--ease-out), filter 0.6s ease;
 }
 
-.gal__item--a { grid-column: span 7; aspect-ratio: 16 / 11; }
+.gal__item--a { grid-column: span 7; aspect-ratio: 16 / 9; }
 .gal__item--b { grid-column: span 5; aspect-ratio: 4 / 5; }
 .gal__item--c { grid-column: span 5; aspect-ratio: 4 / 5; }
 .gal__item--d { grid-column: span 7; aspect-ratio: 16 / 11; }
@@ -2138,6 +2305,14 @@ body.is-ready.has-mobile-cta {
   .gpanel__media { min-height: clamp(300px, 62vw, 520px); }
 
   .offer__inner { grid-template-columns: 1fr; }
+
+  /* Полоса: одной колонкой, резкий кадр под типографикой */
+  .photoband__inner { gap: clamp(18px, 4vw, 34px); }
+
+  .photoband__shot {
+    align-self: stretch;
+    aspect-ratio: 5 / 4;
+  }
 }
 
 /* --- 29. Телефон ----------------------------------------------------------- */

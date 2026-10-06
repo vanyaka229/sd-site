@@ -205,10 +205,16 @@
   <!-- ================= Фото во всю ширину ================= -->
   <section class="photoband" aria-label="Зал студии и аренда">
     <div class="photoband__media">
-      <img src="assets/img/dance-dark.jpg" width="1708" height="1200" loading="lazy" data-parallax="0.16"
-           alt="Ученицы студии на вечерней тренировке">
+      <!-- кадр 1708x1200 при полной ширине требует вдвое больше пикселей,
+           поэтому фон намеренно мягкий, а резкий кадр идёт отдельным слоем -->
+      <img class="photoband__bg" src="assets/img/dance-dark.jpg" width="1708" height="1200"
+           loading="lazy" alt="" aria-hidden="true">
+      <div class="photoband__scrim" aria-hidden="true"></div>
     </div>
-    <div class="photoband__scrim" aria-hidden="true"></div>
+    <figure class="photoband__shot" aria-label="Ученицы студии на вечерней тренировке">
+      <img src="assets/img/dance-dark.jpg" width="1708" height="1200" loading="lazy"
+           data-parallax="0.16" alt="Ученицы студии на вечерней тренировке">
+    </figure>
     <div class="photoband__inner shell">
       <h2 class="photoband__title photoband__title--outline display rv rv--mask">Аренда зала</h2>
       <div class="photoband__foot">
