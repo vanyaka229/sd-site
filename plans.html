@@ -1,13 +1,14 @@
 <!doctype html>
-<html lang="ru">
+<html lang="ru" class="no-js">
 <head>
 <meta charset="utf-8">
+<script>document.documentElement.className = 'js';</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Выбери своё — расписание и абонементы SD Dance Studio в Ялте</title>
 <meta name="description" content="Расписание групп SD Dance Studio в Ялте и стоимость занятий: пробное занятие 300 ₽, разовое 600 ₽, абонементы от 1800 ₽ и «Вездеход» 8200 ₽. Акции для новых и постоянных учеников.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fcc8f3">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1a1a">
-  <meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111111">
+<meta name="color-scheme" content="light dark">
 <link rel="canonical" href="https://sd-dance-studio.ru/plans.html">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Выбери своё — расписание и абонементы SD Dance Studio">
@@ -18,114 +19,235 @@
 <link rel="preload" href="assets/fonts/onest-cyrillic-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/motion.css">
 </head>
 <body>
 
+<a class="skip-link" href="#main">Перейти к содержанию</a>
+
+<div class="read-progress" aria-hidden="true"><div class="read-progress__bar"></div></div>
+
+<div class="cursor-layer" aria-hidden="true">
+  <span class="cursor-layer__light"></span>
+  <span class="cursor-layer__ring"></span>
+</div>
+
+<div class="grain" aria-hidden="true"></div>
+
 <header class="site-header">
   <div class="site-header__inner">
-    <a class="logo" href="index.html">SD Dance Studio</a>
+    <a class="logo" href="index.html"><span class="logo__mark" aria-hidden="true">SD</span>Dance Studio</a>
     <nav class="nav" aria-label="Основная навигация">
       <a class="nav__link" href="index.html#about">О нас</a>
       <a class="nav__link" href="groups.html">Группы</a>
+      <a class="nav__link" href="index.html#schedule">Расписание</a>
+      <a class="nav__link" href="plans.html" aria-current="page">Цены</a>
     </nav>
-    <button class="btn btn--magenta" type="button" data-booking>Записаться на занятие</button>
+    <button class="btn btn--magenta" type="button" data-booking data-magnet="0.14">Записаться</button>
     <button class="burger" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Меню">
       <span></span><span></span><span></span>
     </button>
   </div>
   <nav class="mobile-menu" id="mobile-menu" aria-label="Мобильная навигация">
-    <a class="mobile-menu__link" href="index.html#about">О нас</a>
-    <a class="mobile-menu__link" href="groups.html">Группы</a>
-    <a class="mobile-menu__link" href="plans.html">Выбери своё</a>
-    <button class="mobile-menu__link" type="button" data-booking>Записаться</button>
+    <a class="mobile-menu__link" href="index.html#about"><span class="mobile-menu__num">01</span>О нас</a>
+    <a class="mobile-menu__link" href="groups.html"><span class="mobile-menu__num">02</span>Группы</a>
+    <a class="mobile-menu__link" href="plans.html"><span class="mobile-menu__num">03</span>Выбери своё</a>
+    <button class="mobile-menu__link" type="button" data-booking><span class="mobile-menu__num">04</span>Записаться</button>
   </nav>
 </header>
 
-<main>
-  <div class="page-hero">
+<main id="main">
+
+  <!-- ================= Герой страницы ================= -->
+  <section class="page-hero">
+    <span class="page-hero__index" aria-hidden="true">Цены</span>
     <div class="shell">
-      <h1 class="page-hero__title display">Выбери <span class="accent">своё</span></h1>
-    </div>
-  </div>
-
-  <!-- Расписание по возрастам -->
-  <section class="plans" aria-label="Расписание групп">
-    <div class="plan panel--pink">
-      <h2 class="plan__title display reveal">Для<br>детей</h2>
-      <div class="plan__rows">
-        <p class="plan__row"><span>Dance mix 6-8 лет</span> <span>пн, ср — 17:00</span></p>
-        <p class="plan__row"><span>Dancehall 10+</span> <span>вт, чт — 17:00; сб — 12-14</span></p>
-        <p class="plan__row"><span>Dance mix 8-12 лет</span> <span>пн, ср — 16:00; сб — 12-14</span></p>
+      <div class="page-hero__meta">
+        <span class="micro">Расписание · абонементы · акции</span>
       </div>
-      <button class="btn btn--magenta btn--block" type="button" data-booking>Записаться на занятие</button>
-    </div>
-
-    <div class="plan panel--pink">
-      <h2 class="plan__title display reveal">Для<br>подростков</h2>
-      <div class="plan__rows">
-        <p class="plan__row"><span>Dance mix 12+</span> <span>вт, чт — 18:00; сб — 16:00</span></p>
-        <p class="plan__row"><span>SD CREW FAM (команда)</span> <span>пн, ср — 18:00; сб — 14-16</span></p>
+      <h1 class="page-hero__title display">
+        <span class="ln"><span class="ln__in">Выбери</span></span>
+        <span class="ln ln--indent"><span class="ln__in accent">своё</span></span>
+      </h1>
+      <p class="page-hero__lead">Три возрастные ступени, шесть вариантов абонемента и акции для новых
+        и постоянных учеников. Первое занятие — пробное.</p>
+      <div class="page-hero__facts">
+        <span>Пробное — 300 ₽</span>
+        <span>Разовое — 600 ₽</span>
+        <span>Абонементы от 1800 ₽</span>
       </div>
-      <button class="btn btn--magenta btn--block" type="button" data-booking>Записаться на занятие</button>
-    </div>
-
-    <div class="plan panel--pink">
-      <h2 class="plan__title display reveal">Для<br>взрослых</h2>
-      <div class="plan__rows">
-        <p class="plan__row"><span>Female Dancehall 16+</span> <span>пн, ср — 19:00; сб — 11:00</span></p>
-        <p class="plan__row"><span>Female Dancehall 16+ (с нуля)</span> <span>вт, чт — 19:00</span></p>
-      </div>
-      <button class="btn btn--magenta btn--block" type="button" data-booking>Записаться на занятие</button>
     </div>
   </section>
 
-  <!-- Стоимость -->
-  <section class="price-band">
-    <div class="price-band__inner">
-    <img class="sticker sticker--price sticker--price-1" src="assets/img/star.svg" width="120" height="120" alt="" aria-hidden="true">
-    <img class="sticker sticker--price sticker--price-2" src="assets/img/star.svg" width="120" height="120" alt="" aria-hidden="true">
-    <img class="sticker sticker--price sticker--price-3" src="assets/img/star.svg" width="120" height="120" alt="" aria-hidden="true">
-    <h2 class="price-band__title display reveal">Стоимость</h2>
-    <div class="price-grid">
-      <div class="price-col">
-        <h3 class="price-col__head display">Абонементы</h3>
-        <ul class="price-list">
-          <li><span class="price-list__count">4 занятия</span> <b>1800 ₽</b></li>
-          <li><span class="price-list__count">8 занятий</span> <b>3300 ₽</b></li>
-          <li><span class="price-list__count">10 занятий</span> <b>3700 ₽</b></li>
-          <li><span class="price-list__count">12 занятий</span> <b>4200 ₽</b></li>
-          <li><span class="price-list__count">16 занятий</span> <b>4700 ₽</b></li>
-          <li><span class="price-list__count">22 занятия</span> <b>5700 ₽</b></li>
-        </ul>
+  <!-- ================= Расписание ================= -->
+  <section class="sec band" id="schedule">
+    <div class="shell">
+      <div class="sec-head">
+        <span class="micro rv">01 / Расписание</span>
+        <h2 class="sec-head__title display rv">Группы по возрастам</h2>
       </div>
 
-      <div class="price-col price-col--single">
-        <p class="price-single">Пробное занятие <b>300 ₽</b></p>
-        <p class="price-single">Разовое занятие <b>600 ₽</b></p>
-        <p class="price-single price-single--big">Вездеход <b>8200 ₽</b></p>
-        <button class="btn btn--white" type="button" data-booking>Записаться на занятие</button>
-      </div>
+      <div class="sched">
+        <div class="sched__col rv">
+          <span class="sched__idx display" aria-hidden="true">01</span>
+          <h3 class="sched__title display">Для<br>детей</h3>
+          <div class="sched__rows">
+            <p class="sched__row"><b>Dance mix 6-8 лет</b> <span>пн, ср — 17:00</span></p>
+            <p class="sched__row"><b>Dancehall 10+</b> <span>вт, чт — 17:00; сб — 12-14</span></p>
+            <p class="sched__row"><b>Dance mix 8-12 лет</b> <span>пн, ср — 16:00; сб — 12-14</span></p>
+          </div>
+          <button class="btn btn--black btn--block" type="button" data-booking>Записаться на занятие</button>
+        </div>
 
-      <div class="price-col">
-        <h3 class="price-col__head display">Акции</h3>
-        <div class="promo">
-          <p class="promo__item"><b>Первый абонемент.</b> При покупке абонемента сразу после пробного
-            занятия действует скидка <span class="promo__value">25%</span></p>
-          <p class="promo__item"><b>Семейный абонемент.</b> При покупке абонементов для семьи каждый
-            абонемент получает скидку <span class="promo__value">50%</span></p>
-          <p class="promo__item"><b>Приведи друга.</b> Ты должен быть нашим действующим учеником. Зови
-            друга к нам в школу, друг должен купить себе абонемент, и получи скидку на свой следующий
-            абонемент <span class="promo__value">25%</span></p>
+        <div class="sched__col rv">
+          <span class="sched__idx display" aria-hidden="true">02</span>
+          <h3 class="sched__title display">Для<br>подростков</h3>
+          <div class="sched__rows">
+            <p class="sched__row"><b>Dance mix 12+</b> <span>вт, чт — 18:00; сб — 16:00</span></p>
+            <p class="sched__row"><b>SD CREW FAM (команда)</b> <span>пн, ср — 18:00; сб — 14-16</span></p>
+          </div>
+          <button class="btn btn--black btn--block" type="button" data-booking>Записаться на занятие</button>
+        </div>
+
+        <div class="sched__col rv">
+          <span class="sched__idx display" aria-hidden="true">03</span>
+          <h3 class="sched__title display">Для<br>взрослых</h3>
+          <div class="sched__rows">
+            <p class="sched__row"><b>Female Dancehall 16+</b> <span>пн, ср — 19:00; сб — 11:00</span></p>
+            <p class="sched__row"><b>Female Dancehall 16+ (с нуля)</b> <span>вт, чт — 19:00</span></p>
+          </div>
+          <button class="btn btn--black btn--block" type="button" data-booking>Записаться на занятие</button>
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ================= Стоимость ================= -->
+  <section class="price-band">
+    <div class="shell">
+      <h2 class="price-band__title display rv">Стоимость</h2>
+
+      <div class="price-grid">
+        <div class="price-col rv">
+          <h3 class="price-col__head display">Абонементы</h3>
+          <ul class="price-list">
+            <li><span class="price-list__count">4 занятия</span> <b>1800 ₽</b></li>
+            <li><span class="price-list__count">8 занятий</span> <b>3300 ₽</b></li>
+            <li><span class="price-list__count">10 занятий</span> <b>3700 ₽</b></li>
+            <li><span class="price-list__count">12 занятий</span> <b>4200 ₽</b></li>
+            <li><span class="price-list__count">16 занятий</span> <b>4700 ₽</b></li>
+            <li><span class="price-list__count">22 занятия</span> <b>5700 ₽</b></li>
+          </ul>
+        </div>
+
+        <div class="price-col price-col--single rv">
+          <p class="price-single">Пробное занятие <b>300 ₽</b></p>
+          <p class="price-single">Разовое занятие <b>600 ₽</b></p>
+          <p class="price-single price-single--big">Вездеход <b>8200 ₽</b></p>
+          <button class="btn btn--white" type="button" data-booking data-magnet="0.14">Записаться на занятие</button>
+        </div>
+
+        <div class="price-col rv">
+          <h3 class="price-col__head display">Акции</h3>
+          <div class="promo">
+            <p class="promo__item"><b>Первый абонемент.</b> При покупке абонемента сразу после пробного
+              занятия действует скидка <span class="promo__value">25%</span></p>
+            <p class="promo__item"><b>Семейный абонемент.</b> При покупке абонементов для семьи каждый
+              абонемент получает скидку <span class="promo__value">50%</span></p>
+            <p class="promo__item"><b>Приведи друга.</b> Ты должен быть нашим действующим учеником. Зови
+              друга к нам в школу, друг должен купить себе абонемент, и получи скидку на свой следующий
+              абонемент <span class="promo__value">25%</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Полоса-оффер ================= -->
+  <section class="offer">
+    <div class="offer__inner shell">
+      <div>
+        <span class="micro rv" style="color:#fcc8f3">02 / Первый шаг</span>
+        <h2 class="offer__title display rv">Пробное занятие</h2>
+        <ul class="offer__list">
+          <li>Смотрите зал и знакомитесь с тренером</li>
+          <li>Пробуете разминку и базовые степы</li>
+          <li>Решаете, подходит ли группа по возрасту и уровню</li>
+        </ul>
+        <button class="btn btn--magenta btn--lg" type="button" data-booking data-magnet="0.16">Записаться на пробное</button>
+      </div>
+      <div class="offer__num display" data-count="300" aria-label="300 рублей">300</div>
+    </div>
+  </section>
+
+  <!-- ================= Кинетическая лента ================= -->
+  <div class="ticker ticker--pink" aria-label="Что входит в занятия">
+    <div class="ticker__track">
+      <div class="ticker__group">
+        <span class="ticker__item">Разминка</span>
+        <span class="ticker__item ticker__item--ghost">Степы</span>
+        <span class="ticker__item">Хореография</span>
+        <span class="ticker__item ticker__item--ghost">Импровизация</span>
+        <span class="ticker__item">Чемпионаты</span>
+        <span class="ticker__item ticker__item--ghost">Джемы</span>
+      </div>
+      <div class="ticker__group" aria-hidden="true">
+        <span class="ticker__item">Разминка</span>
+        <span class="ticker__item ticker__item--ghost">Степы</span>
+        <span class="ticker__item">Хореография</span>
+        <span class="ticker__item ticker__item--ghost">Импровизация</span>
+        <span class="ticker__item">Чемпионаты</span>
+        <span class="ticker__item ticker__item--ghost">Джемы</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Фото во всю ширину ================= -->
+  <section class="photoband" aria-label="Зал студии и аренда">
+    <div class="photoband__media">
+      <img src="assets/img/dance-dark.jpg" width="1708" height="1200" loading="lazy" data-parallax="0.16"
+           alt="Ученицы студии на вечерней тренировке">
+    </div>
+    <div class="photoband__scrim" aria-hidden="true"></div>
+    <div class="photoband__inner shell">
+      <h2 class="photoband__title photoband__title--outline display rv rv--mask">Аренда зала</h2>
+      <div class="photoband__foot">
+        <p class="photoband__note rv">Для учеников — 300 ₽/час, для всех остальных — 600 ₽/час.
+          Забронировать время можно в телеграм-канале danceyalta.</p>
+        <a class="btn btn--magenta btn--lg" href="https://t.me/danceyalta" target="_blank" rel="noopener" data-magnet="0.16">Забронировать зал</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Призыв ================= -->
+  <section class="cta">
+    <div class="cta__grid" aria-hidden="true"></div>
+    <div class="cta__inner shell">
+      <span class="micro rv">03 / Запись</span>
+      <h2 class="cta__title display rv rv--mask">Забронируй место</h2>
+      <p class="cta__lead rv">Оставьте имя и телефон — подберём группу, подскажем расписание
+        и запишем на пробное занятие.</p>
+      <div class="cta__actions rv">
+        <button class="btn btn--black btn--lg" type="button" data-booking data-magnet="0.16">Записаться на занятие</button>
+        <a class="btn btn--outline btn--lg" href="https://t.me/sd_dancestudio" target="_blank" rel="noopener">Написать в Telegram</a>
+      </div>
+      <div class="cta__ticks rv">
+        <span>Пробное занятие — 300 ₽</span>
+        <span>Скидка 25% на первый абонемент</span>
+        <span>Дети от 5 лет</span>
+      </div>
     </div>
   </section>
 </main>
 
 <footer class="site-footer">
   <div class="shell">
-    <div class="site-footer__logo">SD Dance Studio</div>
+    <div class="footer__top">
+      <div class="site-footer__logo">SD Dance Studio</div>
+      <p class="footer__tag">Школа танцев в Ялте. Dancehall, female dancehall, dance mix, джемы
+        и практики — для детей от 5 лет и взрослых.</p>
+    </div>
+
     <div class="footer__grid">
       <div class="footer__col">
         <h3 class="footer__head">Контакты</h3>
@@ -140,14 +262,19 @@
         <p class="footer__text footer__text--muted">Забронировать время можно в тгк:
           <a class="footer__link" href="https://t.me/danceyalta" target="_blank" rel="noopener">danceyalta</a></p>
       </div>
-      <div class="footer__col footer__col--social">
-        <h3 class="footer__head">Соц.<br>сети</h3>
+      <div class="footer__col">
+        <h3 class="footer__head">Соц. сети</h3>
         <div class="footer__links">
           <a class="footer__link" href="https://instagram.com/sd_dancestudio" target="_blank" rel="noopener">Instagram</a>
           <a class="footer__link" href="https://t.me/danceyalta" target="_blank" rel="noopener">ТГК</a>
           <a class="footer__link" href="https://www.tiktok.com/@sd_dancestudio" target="_blank" rel="noopener">TikTok</a>
         </div>
       </div>
+    </div>
+
+    <div class="footer__bottom">
+      <span>Ялта · SD Dance Studio</span>
+      <span>Dancehall · Female Dancehall · Dance Mix</span>
     </div>
   </div>
 </footer>
@@ -165,8 +292,16 @@
     <div class="modal__pane" id="pane-form" role="tabpanel" aria-labelledby="tab-form">
       <!-- Чтобы заявки уходили на почту или в Telegram-бот, впишите адрес приёмника
            в data-endpoint (например, Web3Forms/Formspree). Без него форма открывает
-           Telegram с готовым текстом заявки. -->
-      <form class="booking-form" data-endpoint="">
+           Telegram с готовым текстом заявки.
+           novalidate: разметку проверяет js/main.js, чтобы сообщение об ошибке
+           всегда было видно в самой форме. -->
+      <form class="booking-form" data-endpoint="" novalidate>
+        <!-- приманка для ботов: люди этого поля не видят -->
+        <span class="visually-hidden" aria-hidden="true">
+          <label>Не заполняйте это поле
+            <input type="text" name="company" tabindex="-1" autocomplete="off" data-honeypot>
+          </label>
+        </span>
         <label class="field"><span>Имя</span>
           <input type="text" name="name" autocomplete="name" enterkeyhint="next" required placeholder="Как вас зовут">
         </label>
@@ -210,6 +345,17 @@
   </div>
 </div>
 
+<!-- Просмотр фотографий -->
+<div class="lightbox" id="lightbox" data-open="false" role="dialog" aria-modal="true" aria-label="Просмотр фотографии">
+  <figure class="lightbox__fig">
+    <img class="lightbox__img" src="" alt="">
+    <figcaption class="lightbox__cap"></figcaption>
+  </figure>
+  <button class="lightbox__close" type="button" data-lb-close aria-label="Закрыть просмотр">&times;</button>
+  <button class="lightbox__nav lightbox__nav--prev" type="button" data-lb-prev aria-label="Предыдущее фото">&#8249;</button>
+  <button class="lightbox__nav lightbox__nav--next" type="button" data-lb-next aria-label="Следующее фото">&#8250;</button>
+</div>
+
 <!-- Липкая кнопка записи на телефоне -->
 <div class="mobile-cta">
   <button class="btn btn--magenta" type="button" data-booking>Записаться на занятие</button>
@@ -222,5 +368,6 @@
 </button>
 
 <script src="js/main.js"></script>
+<script src="js/motion.js"></script>
 </body>
 </html>
