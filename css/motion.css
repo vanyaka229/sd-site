@@ -1,0 +1,406 @@
+/* ==========================================================================
+   SD DANCE STUDIO — слой движения (css/motion.css)
+   Здесь живёт всё, что двигается: вход героя, появление секций каскадом,
+   бегущие строки, прогресс чтения, микро-анимации формы, модальное окно.
+   Правило: анимируем только transform и opacity. Ни одной layout-свойства.
+   В самом конце файла — prefers-reduced-motion: движение выключается.
+   ========================================================================== */
+
+/* --- 01. Вход героя: строки выезжают из маски ----------------------------- */
+.hero__title .ln__in,
+.page-hero__title .ln__in {
+  transform: translate3d(0, 105%, 0);
+  transition: transform 0.95s var(--ease-out);
+}
+
+.hero__title .ln:nth-child(1) .ln__in { transition-delay: 0.08s; }
+.hero__title .ln:nth-child(2) .ln__in { transition-delay: 0.17s; }
+.hero__title .ln:nth-child(3) .ln__in { transition-delay: 0.26s; }
+.hero__title .ln:nth-child(4) .ln__in { transition-delay: 0.35s; }
+
+.page-hero__title .ln:nth-child(1) .ln__in { transition-delay: 0.06s; }
+.page-hero__title .ln:nth-child(2) .ln__in { transition-delay: 0.15s; }
+
+.is-ready .hero__title .ln__in,
+.is-ready .page-hero__title .ln__in {
+  transform: translate3d(0, 0, 0);
+}
+
+/* Прочие элементы героя подтягиваются следом */
+.hero__meta,
+.hero__bottom,
+.hero__facts,
+.hero__scroll {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition: opacity 0.7s ease, transform 0.7s var(--ease-out);
+}
+
+.hero__meta { transition-delay: 0.04s; }
+.hero__bottom { transition-delay: 0.42s; }
+.hero__facts { transition-delay: 0.52s; }
+.hero__scroll { transition-delay: 0.7s; }
+
+.is-ready .hero__meta,
+.is-ready .hero__bottom,
+.is-ready .hero__facts,
+.is-ready .hero__scroll {
+  opacity: 1;
+  transform: none;
+}
+
+/* Фото героя: раскрытие маской снизу + лёгкий масштаб */
+.hero__media {
+  clip-path: inset(9% 0 9% 0);
+  transition: clip-path 1.15s var(--ease-out);
+}
+
+.is-ready .hero__media { clip-path: inset(0 0 0 0); }
+
+/* Внутренние герои: индекс и подпись */
+.page-hero__index,
+.page-hero__lead,
+.page-hero__facts,
+.page-hero__meta {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition: opacity 0.7s ease, transform 0.7s var(--ease-out);
+}
+
+.is-ready .page-hero__index { opacity: 1; transform: none; transition-delay: 0.28s; }
+.is-ready .page-hero__meta { opacity: 1; transform: none; transition-delay: 0.05s; }
+.is-ready .page-hero__lead { opacity: 1; transform: none; transition-delay: 0.34s; }
+.is-ready .page-hero__facts { opacity: 1; transform: none; transition-delay: 0.42s; }
+
+/* --- 02. Появление при прокрутке ------------------------------------------ */
+.rv {
+  opacity: 0;
+  transform: translate3d(0, var(--rv-y, 22px), 0) scale(var(--rv-s, 1));
+  transition:
+    opacity 0.62s ease,
+    transform 0.62s var(--ease-out);
+  transition-delay: var(--rv-d, 0ms);
+}
+
+.rv.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Каскад: чем дальше сосед, тем позже — шаг 60 мс */
+.rv:nth-child(1) { --rv-d: 0ms; }
+.rv:nth-child(2) { --rv-d: 60ms; }
+.rv:nth-child(3) { --rv-d: 120ms; }
+.rv:nth-child(4) { --rv-d: 180ms; }
+.rv:nth-child(5) { --rv-d: 240ms; }
+.rv:nth-child(6) { --rv-d: 300ms; }
+
+/* Явные задержки там, где nth-child не подходит */
+.rv--d1 { --rv-d: 60ms; }
+.rv--d2 { --rv-d: 120ms; }
+.rv--d3 { --rv-d: 180ms; }
+.rv--d4 { --rv-d: 240ms; }
+.rv--d5 { --rv-d: 300ms; }
+.rv--d6 { --rv-d: 360ms; }
+
+/* Модификаторы направления */
+.rv--left { --rv-y: 0px; transform: translate3d(-26px, 0, 0); }
+.rv--right { --rv-y: 0px; transform: translate3d(26px, 0, 0); }
+.rv--scale { --rv-y: 12px; --rv-s: 0.965; }
+.rv--mask {
+  --rv-y: 0px;
+  clip-path: inset(0 0 100% 0);
+  transition: opacity 0.6s ease, transform 0.6s var(--ease-out), clip-path 0.85s var(--ease-out);
+}
+
+.rv--mask.is-in { clip-path: inset(0 0 0 0); }
+
+/* Заголовки: маска строк, включается тем же наблюдателем */
+.rv-lines .ln { display: block; overflow: hidden; padding-bottom: 0.05em; }
+
+.rv-lines .ln__in {
+  display: block;
+  transform: translate3d(0, 105%, 0);
+  transition: transform 0.9s var(--ease-out);
+}
+
+.rv-lines.is-in .ln:nth-child(1) .ln__in { transition-delay: 0.05s; }
+.rv-lines.is-in .ln:nth-child(2) .ln__in { transition-delay: 0.13s; }
+.rv-lines.is-in .ln:nth-child(3) .ln__in { transition-delay: 0.21s; }
+
+.rv-lines.is-in .ln__in { transform: translate3d(0, 0, 0); }
+
+/* Заголовки-строки .sec-head поступают каскадом внутри себя */
+.sec-head .rv:nth-child(1) { --rv-d: 0ms; }
+.sec-head .rv:nth-child(2) { --rv-d: 80ms; }
+.sec-head .rv:nth-child(3) { --rv-d: 160ms; }
+
+/* Если JS недоступен — всё видно сразу */
+.no-js .rv,
+.no-js .rv-lines .ln__in,
+.no-js .hero__title .ln__in,
+.no-js .page-hero__title .ln__in {
+  opacity: 1;
+  transform: none;
+  clip-path: none;
+}
+
+/* --- 03. Фото в маске: раскрытие масштабом ------------------------------- */
+/* Раньше здесь был clip-path. Он создавал у элемента пустую область попадания:
+   по галерее нельзя было кликнуть, события уходили в контейнер. Теперь фото
+   входит масштабом внутри своей маски (у контейнера уже overflow:hidden). */
+.mask-media img {
+  opacity: 0;
+  transform: scale(1.08);
+  transition: opacity 0.75s ease, transform 1.2s var(--ease-out);
+  transition-delay: var(--rv-d, 0ms);
+  will-change: transform, opacity;
+}
+
+.mask-media.is-in img {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Панорама во всю ширину: сам блок тоже подъезжает, но кликов по нему нет */
+.community img {
+  opacity: 0;
+  transform: scale(1.04);
+  transition: opacity 0.8s ease, transform 1.3s var(--ease-out);
+}
+
+.community.is-in img,
+.is-ready .community img {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* --- 04. Параллакс --------------------------------------------------------- */
+[data-parallax] { will-change: transform; }
+
+/* Картинка внутри полосы чуть больше полосы, чтобы было куда двигаться */
+.photoband__media img,
+.gpanel__media img,
+.photorail-fallback img { backface-visibility: hidden; }
+
+/* --- 05. Цифры: подъём счётчика ------------------------------------------- */
+.fact__num,
+.offer__num {
+  transition: transform 0.7s var(--ease-out);
+}
+
+.fact.is-in .fact__num,
+.offer.is-in .offer__num { transform: none; }
+
+.fact__num { transform: translate3d(0, 14px, 0); }
+.offer__num { transform: translate3d(0, 18px, 0); }
+
+/* --- 06. Форма: фокус, «дышащая» кнопка, успех ---------------------------- */
+/* «Дыхание» — пульс box-shadow, а не сдвиг: кнопка остаётся неподвижной,
+   поэтому по ней всегда можно попасть (в том числе программным кликом). */
+.booking-form button[type="submit"] {
+  animation: breath 3.4s var(--ease-in-out) infinite;
+}
+
+@keyframes breath {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(251 18 162 / 55%); }
+  55% { box-shadow: 0 0 0 12px rgb(251 18 162 / 0%); }
+}
+
+/* Наведение: пульс замирает, чтобы не спорить с реакцией на курсор */
+@media (hover: hover) and (pointer: fine) {
+  .booking-form button[type="submit"]:hover { animation-play-state: paused; }
+}
+
+/* Фокус-подсветка поля: тонкая линия снизу растёт от центра */
+.field input,
+.field select,
+.field textarea {
+  background-repeat: no-repeat;
+  background-position: 50% 100%;
+  background-size: 0% 2px;
+  background-image: linear-gradient(90deg, var(--magenta), var(--magenta));
+  transition:
+    border-color 0.22s ease,
+    background-color 0.22s ease,
+    background-size 0.42s var(--ease-out),
+    box-shadow 0.24s ease;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus { background-size: 100% 2px; }
+
+/* Неверное поле: короткая тряска по горизонтали */
+.field.is-invalid input,
+.field.is-invalid select {
+  animation: shake 0.4s var(--ease-out) 1 both;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  18% { transform: translate3d(-5px, 0, 0); }
+  38% { transform: translate3d(4px, 0, 0); }
+  58% { transform: translate3d(-3px, 0, 0); }
+  78% { transform: translate3d(2px, 0, 0); }
+}
+
+/* Успешная отправка */
+.booking-form[data-state='sent'] .field { opacity: 0.45; transition: opacity 0.4s ease; }
+
+.form-status[data-state='ok'] { animation: status-in 0.45s var(--ease-out) 1 both; }
+.form-status[data-state='error'] { animation: status-in 0.35s var(--ease-out) 1 both; }
+
+@keyframes status-in {
+  from { opacity: 0; transform: translate3d(0, 7px, 0); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Галочка успеха рисуется сама */
+.form-status[data-state='ok']::before {
+  content: '';
+  display: inline-block;
+  width: 8px; height: 4px;
+  margin-right: 0.6em;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg) translateY(-1px);
+  animation: check-draw 0.4s var(--ease-out) 0.05s 1 both;
+}
+
+@keyframes check-draw {
+  from { opacity: 0; transform: rotate(-45deg) translateY(-1px) scale(0.4); }
+  to { opacity: 1; transform: rotate(-45deg) translateY(-1px) scale(1); }
+}
+
+/* --- 07. Модальное окно и «шторка» ---------------------------------------- */
+.modal[data-open='true'] .modal__box { transition-delay: 0.04s; }
+
+/* На телефоне окно въезжает снизу, как шторка */
+@media (max-width: 767px) {
+  .modal { place-items: end center; padding: 0; }
+
+  .modal__box {
+    width: 100%;
+    max-height: 92dvh;
+    transform: translate3d(0, 4%, 0);
+    opacity: 1;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    transition: transform 0.46s var(--ease-drawer);
+  }
+
+  .modal[data-open='true'] .modal__box { transform: none; }
+}
+
+/* --- 08. Ссылки и карточки: отклик на курсор ------------------------------ */
+@media (hover: hover) and (pointer: fine) {
+  .rail__item,
+  .gal__item,
+  .sched__col,
+  .gpanel__media {
+    transition: transform 0.5s var(--ease-out);
+  }
+}
+
+/* Пункты расписания: строка подсвечивается при наведении */
+@media (hover: hover) and (pointer: fine) {
+  .sched__row { transition: transform 0.3s var(--ease-out); }
+  .sched__col:hover .sched__row { opacity: 0.94; }
+}
+
+/* Кнопка «наверх» и липкая кнопка: отклик на нажатие */
+.mobile-cta .btn:active { transform: scale(0.98); }
+
+/* --- 09. Кнопка с магнитным эффектом ------------------------------------- */
+[data-magnet] {
+  transform: translate3d(var(--mx, 0px), var(--my, 0px), 0);
+  transition: transform 0.35s var(--ease-out);
+}
+
+[data-magnet].is-pulling { transition: transform 0.18s var(--ease-out); }
+
+/* --- 10. Зерно: очень медленное «дыхание» плёнки -------------------------- */
+.grain { animation: grain-shift 7s steps(6, end) infinite; }
+
+@keyframes grain-shift {
+  0% { transform: translate3d(0, 0, 0); }
+  16% { transform: translate3d(-1.5%, 1%, 0); }
+  33% { transform: translate3d(1%, -1.5%, 0); }
+  50% { transform: translate3d(-1%, -1%, 0); }
+  66% { transform: translate3d(1.5%, 1.5%, 0); }
+  83% { transform: translate3d(-1%, 1.5%, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+/* --- 11. Бегущие строки: пауза, когда лента вне вида ---------------------- */
+.ticker.is-idle .ticker__track { animation-play-state: paused; }
+
+/* --- 12. Просмотр фото ---------------------------------------------------- */
+.lightbox__img { transition: transform 0.42s var(--ease-out), opacity 0.32s ease; }
+
+.lightbox__nav,
+.lightbox__close { transition: background-color 0.24s ease, border-color 0.24s ease, transform 0.16s var(--ease-out); }
+
+/* --- 13. Отключение движения --------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  /* Всё, что въезжает, просто появляется без перемещения */
+  .rv,
+  .media-reveal,
+  .hero__meta,
+  .hero__bottom,
+  .hero__facts,
+  .hero__scroll,
+  .page-hero__index,
+  .page-hero__lead,
+  .page-hero__facts,
+  .page-hero__meta,
+  .lightbox__img,
+  .fact__num,
+  .offer__num {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    transition: opacity 0.2s ease !important;
+    transition-delay: 0ms !important;
+  }
+
+  .hero__title .ln__in,
+  .page-hero__title .ln__in,
+  .rv-lines .ln__in {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .hero__media { clip-path: none !important; transition: none !important; }
+  .hero__media img { transform: none !important; opacity: 1 !important; transition: none !important; }
+
+  /* Ленты стоят на месте */
+  .ticker__track {
+    animation: none !important;
+    transform: none !important;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .ticker__group[aria-hidden='true'] { display: none; }
+
+  /* Микро-анимации выключены, состояние остаётся читаемым */
+  .grain { animation: none !important; }
+  .booking-form button[type="submit"] { animation: none !important; }
+  .field.is-invalid input,
+  .field.is-invalid select { animation: none !important; border-color: #8c0f1e; }
+  .form-status[data-state='ok'],
+  .form-status[data-state='error'],
+  .form-status[data-state='ok']::before { animation: none !important; }
+
+  [data-parallax] { transform: none !important; }
+
+  .cursor-layer { display: none !important; }
+
+  [data-magnet] { transform: none !important; }
+}
