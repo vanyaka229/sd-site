@@ -146,8 +146,10 @@ ul {
   will-change: transform;
 }
 
-.btn:hover {
-  transform: translateY(-1px);
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover {
+    transform: translateY(-1px);
+  }
 }
 
 .btn:active {
@@ -159,8 +161,10 @@ ul {
   color: var(--black);
 }
 
-.btn--magenta:hover {
-  background: #e00f92;
+@media (hover: hover) and (pointer: fine) {
+  .btn--magenta:hover {
+    background: #e00f92;
+  }
 }
 
 .btn--pink {
@@ -476,8 +480,10 @@ ul {
   transition: padding-left 0.2s ease;
 }
 
-.reasons__more:hover {
-  padding-left: calc(clamp(16px, 2vw, 26px) + 6px);
+@media (hover: hover) and (pointer: fine) {
+  .reasons__more:hover {
+    padding-left: calc(clamp(16px, 2vw, 26px) + 6px);
+  }
 }
 
 .split--reasons .split__media {
@@ -565,8 +571,10 @@ ul {
   transition: opacity 0.2s ease;
 }
 
-.footer__link:hover {
-  opacity: 0.6;
+@media (hover: hover) and (pointer: fine) {
+  .footer__link:hover {
+    opacity: 0.6;
+  }
 }
 
 /* --- 8. Модальное окно записи -------------------------------------------- */
@@ -646,8 +654,10 @@ ul {
   border-radius: 50%;
 }
 
-.modal__close:hover {
-  background: rgb(0 0 0 / 8%);
+@media (hover: hover) and (pointer: fine) {
+  .modal__close:hover {
+    background: rgb(0 0 0 / 8%);
+  }
 }
 
 /* --- 9. Страница «Группы» ------------------------------------------------- */
@@ -1050,9 +1060,11 @@ a:focus-visible {
 
   .split__media:hover img,
   .group-media:hover img,
-  .gallery__item:hover img {
-    transform: scale(1.03);
-  }
+@media (hover: hover) and (pointer: fine) {
+    .gallery__item:hover img {
+      transform: scale(1.03);
+    }
+}
 }
 
 .reveal.is-visible {
@@ -1071,9 +1083,11 @@ a:focus-visible {
     transition: none;
   }
 
-  .btn:hover {
-    transform: none;
-  }
+@media (hover: hover) and (pointer: fine) {
+    .btn:hover {
+      transform: none;
+    }
+}
 }
 
 /* --- Внутренняя раскладка панелей страницы «Группы» (координаты из макета) --- */
@@ -1444,8 +1458,10 @@ a:focus-visible {
   transition: opacity 0.2s ease;
 }
 
-.schedule-band__link:hover {
-  opacity: 0.6;
+@media (hover: hover) and (pointer: fine) {
+  .schedule-band__link:hover {
+    opacity: 0.6;
+  }
 }
 
 /* --- 11b. Широкие экраны: контент в колонке 1280, фон полос на всю ширину --- */
@@ -2014,5 +2030,101 @@ a:focus-visible {
 
   .footer__links {
     gap: 4px;
+  }
+}
+
+
+/* ===========================================================================
+   Поведение на телефоне (правила скилла mobile-native)
+   Всё завязано на возможности ввода, а не на ширину экрана: планшет с мышью
+   и ноутбук с тачскрином обслуживаются правильно.
+   =========================================================================== */
+
+html {
+  /* браузер больше не рисует серую вспышку поверх нажатого элемента:
+     она перекрывала нашу собственную реакцию на нажатие */
+  -webkit-tap-highlight-color: transparent;
+  /* в горизонтальной ориентации iOS не раздувает шрифт */
+  -webkit-text-size-adjust: 100%;
+}
+
+/* элементы управления: тап срабатывает без задержки на двойной тап,
+   а долгое нажатие не выделяет подпись кнопки, как обычный текст */
+button,
+a,
+[role="button"],
+.btn,
+.mobile-cta,
+.to-top,
+.modal__tab,
+.modal__close {
+  touch-action: manipulation;
+}
+
+button,
+[role="button"],
+.btn,
+.mobile-cta,
+.to-top,
+.modal__tab {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* нажатие: отклик при касании, а не при отпускании */
+.btn,
+.mobile-cta,
+.to-top,
+.modal__tab {
+  transition: transform 120ms ease-out, background-color 120ms ease-out, color 120ms ease-out;
+}
+
+.btn:active,
+.mobile-cta:active,
+.to-top:active,
+.modal__tab:active {
+  transform: scale(0.97);
+}
+
+/* на телефоне hover нет: вместо увеличения фото показываем лёгкий отклик */
+@media (hover: none), (pointer: coarse) {
+  .gallery__item:active img,
+  .split__media:active img,
+  .group-media:active img {
+    transform: scale(1.03);
+  }
+}
+
+/* --- вырез экрана и системные полосы --------------------------------------- */
+
+/* липкая кнопка внизу не должна попадать под домашнюю полосу iPhone */
+.mobile-cta {
+  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+}
+
+@media (max-width: 767px) {
+  body.has-mobile-cta {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* модальное окно: высота по видимой области (при скрытии адресной строки
+   ничего не обрезается), прокрутка внутри не тянет страницу за собой */
+.modal__dialog {
+  max-height: 90dvh;
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 767px) {
+  .modal__dialog {
+    padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* фото в карточках: ограничение по видимой высоте, а не по «большой» */
+@media (max-width: 1023px) {
+  .panel-figure img {
+    max-height: 46dvh;
   }
 }
