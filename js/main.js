@@ -141,7 +141,11 @@ var TELEGRAM_SEND_BASE = 'https://t.me/' + TELEGRAM_USERNAME + '?text=';
   if (form) {
     var status = form.querySelector('.form-status');
     var submit = form.querySelector('button[type="submit"]');
+    /* Поля ввода НИКОГДА не восстанавливаем из памяти браузера: иначе посетитель
+       открывает форму и видит чужие данные (имя и телефон прошлого человека).
+       Старый «черновик» с этой версии не читаем и вычищаем у всех. */
     var DRAFT_KEY = 'sd_booking_draft';
+    try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
 
     var setStatus = function (text, state) {
       if (!status) return;
@@ -188,6 +192,7 @@ var TELEGRAM_SEND_BASE = 'https://t.me/' + TELEGRAM_USERNAME + '?text=';
     };
 
     // Прошлую «готовую» заявку не теряем: окно откроется с уже живой кнопкой.
+    // ВАЖНО: из памяти берём только текст для кнопки/ссылки — поля ввода остаются пустыми.
     try {
       var readySaved = localStorage.getItem(READY_KEY);
       if (readySaved) {
@@ -197,7 +202,7 @@ var TELEGRAM_SEND_BASE = 'https://t.me/' + TELEGRAM_USERNAME + '?text=';
           manual.setAttribute('href', TELEGRAM_SEND_BASE + encodeURIComponent(readySaved));
         }
         if (submit) submit.hidden = true;
-        setStatus('Заявка сохранена — отправьте её одним нажатием: откроется чат студии с готовым текстом.', 'ready');
+        setStatus(SOFT_TEXT, 'ready');
       }
     } catch (e) {}
 
@@ -233,42 +238,9 @@ var TELEGRAM_SEND_BASE = 'https://t.me/' + TELEGRAM_USERNAME + '?text=';
       });
     }
 
-    /* Черновик: если человек случайно закрыл окно, поля не пропадут.
-       Для сохранённых значений автосохранение отключаем — иначе браузер
-       восстанавливает их уже после того, как мы записали пустые. */
-    var draftReady = false;
-    try {
-      var saved = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
-      if (saved && typeof saved === 'object') {
-        ['name', 'phone', 'comment'].forEach(function (key) {
-          var field = form.elements[key];
-          if (field && saved[key]) field.value = saved[key];
-        });
-        if (saved.group) {
-          var sel = form.elements.group;
-          if (sel) sel.value = saved.group;
-        }
-      }
-    } catch (e) {}
-
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () { draftReady = true; });
-    });
-
-    var saveDraft = function () {
-      if (!draftReady) return;
-      try {
-        localStorage.setItem(DRAFT_KEY, JSON.stringify({
-          name: form.elements.name ? form.elements.name.value : '',
-          phone: form.elements.phone ? form.elements.phone.value : '',
-          group: form.elements.group ? form.elements.group.value : '',
-          comment: form.elements.comment ? form.elements.comment.value : ''
-        }));
-      } catch (e) {}
-    };
-
-    form.addEventListener('change', saveDraft);
-    form.addEventListener('focusout', saveDraft);
+    /* Черновик убран полностью (8 октября 2026): автосохранение полей приводило к тому,
+       что форма открывалась заполненной прошлыми значениями. Ничего в поля не подставляем
+       и ничего из полей не сохраняем — при новом визите форма всегда пустая. */
 
     /* Поле-приманка для ботов: люди его не видят и не заполняют */
     var honeypot = form.querySelector('[data-honeypot]');
