@@ -73,11 +73,17 @@ var TELEGRAM_SEND_BASE = 'https://t.me/' + TELEGRAM_USERNAME + '?text=';
   /* --- Модальное окно записи ------------------------------------------- */
   var modal = document.getElementById('booking');
   var lastFocused = null;
+  /* Сброс состояния формы на обычный вид: заполняется в блоке формы ниже
+     и вызывается при каждом открытии окна. */
+  var resetBookingState = null;
 
   function openModal(event) {
     if (!modal) return;
     if (event) event.preventDefault();
     lastFocused = document.activeElement;
+    /* Каждое открытие окна — с чистого листа: подпись, кнопки и поля как в первый раз.
+       Сброс делаем только на переходе «закрыто -> открыто». */
+    if (resetBookingState && modal.getAttribute('data-open') !== 'true') resetBookingState();
     modal.setAttribute('data-open', 'true');
     document.body.style.overflow = 'hidden';
     var focusable = modal.querySelector('a, button');
@@ -141,11 +147,16 @@ var TELEGRAM_SEND_BASE = 'https://t.me/' + TELEGRAM_USERNAME + '?text=';
   if (form) {
     var status = form.querySelector('.form-status');
     var submit = form.querySelector('button[type="submit"]');
-    /* Поля ввода НИКОГДА не восстанавливаем из памяти браузера: иначе посетитель
-       открывает форму и видит чужие данные (имя и телефон прошлого человека).
-       Старый «черновик» с этой версии не читаем и вычищаем у всех. */
-    var DRAFT_KEY = 'sd_booking_draft';
-    try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+    /* Ни «черновик» полей, ни «готовая заявка» в памяти браузера больше не нужны:
+       форма всегда открывается обычной, поля пустые. Старые ключи вычищаем,
+       чтобы у вернувшихся посетителей не оставалось следов прошлых открытий. */
+    var forgetSaved = function () {
+      try {
+        localStorage.removeItem('sd_booking_draft');
+        localStorage.removeItem('sd_booking_ready');
+      } catch (e) {}
+    };
+    forgetSaved();
 
     var setStatus = function (text, state) {
       if (!status) return;
@@ -154,9 +165,10 @@ var TELEGRAM_SEND_BASE = 'https://t.me/' + TELEGRAM_USERNAME + '?text=';
       else status.removeAttribute('data-state');
     };
 
-    /* Кнопка ручной отправки и сохранённая «готовая» заявка. */
+    /* Кнопка ручной отправки. Она появляется ТОЛЬКО после реальной попытки отправки,
+       когда ни приёмник, ни Telegram не ответили, — из памяти браузера её не поднимаем. */
     var manual = form.querySelector('.booking-form__manual');
-    var READY_KEY = 'sd_booking_ready';
+    var MANUAL_LABEL = 'Отправить заявку в Telegram';
     var lastMessage = '';
     /* Мягкий текст вместо слова «ошибка»: заявка готова, её осталось отправить. */
     var SOFT_TEXT = 'Заявка готова — отправьте её одним нажатием: откроется чат студии с готовым текстом.';
@@ -187,24 +199,28 @@ var TELEGRAM_SEND_BASE = 'https://t.me/' + TELEGRAM_USERNAME + '?text=';
       fallback();
     };
 
-    var rememberReady = function (text) {
-      try { localStorage.setItem(READY_KEY, text); } catch (e) {}
-    };
-
-    // Прошлую «готовую» заявку не теряем: окно откроется с уже живой кнопкой.
-    // ВАЖНО: из памяти берём только текст для кнопки/ссылки — поля ввода остаются пустыми.
-    try {
-      var readySaved = localStorage.getItem(READY_KEY);
-      if (readySaved) {
-        lastMessage = readySaved;
-        if (manual) {
-          manual.hidden = false;
-          manual.setAttribute('href', TELEGRAM_SEND_BASE + encodeURIComponent(readySaved));
-        }
-        if (submit) submit.hidden = true;
-        setStatus(SOFT_TEXT, 'ready');
+    /* Появление окна всегда возвращает форму к обычному виду: подпись пустая,
+       кнопка t.me спрятана, основная кнопка на месте, поля пустые.
+       Никакого «готово» до отправки и никаких следов прошлого открытия.
+       Эту функцию вызывает openModal (см. выше). */
+    var resetToPlainForm = function () {
+      lastMessage = '';
+      setStatus('', null);
+      if (manual) {
+        manual.hidden = true;
+        manual.textContent = MANUAL_LABEL;
+        manual.removeAttribute('href');
       }
-    } catch (e) {}
+      if (submit) {
+        submit.hidden = false;
+        submit.disabled = false;
+      }
+      form.reset();
+      form.querySelectorAll('.field').forEach(function (field) {
+        field.classList.remove('is-invalid');
+      });
+    };
+    resetBookingState = resetToPlainForm;
 
     /* Заявку собираем заново прямо в момент нажатия: если человек поправил
        телефон уже после мягкого перехода, в чат уйдёт актуальный текст. */
@@ -232,7 +248,6 @@ var TELEGRAM_SEND_BASE = 'https://t.me/' + TELEGRAM_USERNAME + '?text=';
         if (!fresh) return;
         lastMessage = fresh;
         manual.setAttribute('href', TELEGRAM_SEND_BASE + encodeURIComponent(fresh));
-        rememberReady(fresh);
         copyToClipboard(fresh);
         manual.textContent = 'Скопировано — вставьте заявку в чат';
       });
@@ -297,12 +312,12 @@ var TELEGRAM_SEND_BASE = 'https://t.me/' + TELEGRAM_USERNAME + '?text=';
         if (manual) {
           manual.hidden = false;
           manual.setAttribute('href', TELEGRAM_SEND_BASE + encodeURIComponent(message));
-          manual.textContent = 'Отправить заявку в Telegram';
+          manual.textContent = MANUAL_LABEL;
         }
         /* На экране должна остаться одна понятная кнопка, а не две одинаковые:
            прячем «Отправить заявку» и оставляем ручную отправку. */
         if (submit) { submit.hidden = true; submit.disabled = false; }
-        rememberReady(message);
+        /* В память браузера ничего не пишем: мягкий режим живёт только в этой попытке. */
         setStatus(text, 'ready');
       };
 
@@ -317,7 +332,7 @@ var TELEGRAM_SEND_BASE = 'https://t.me/' + TELEGRAM_USERNAME + '?text=';
         setStatus('Заявка отправлена! Мы свяжемся с вами, чтобы подтвердить запись.', 'ok');
         form.reset();
         lastMessage = '';
-        try { localStorage.removeItem(DRAFT_KEY); localStorage.removeItem(READY_KEY); } catch (e) {}
+        forgetSaved();
         if (manual) manual.hidden = true;
         if (submit) submit.hidden = false;
       };
