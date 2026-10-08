@@ -26,8 +26,13 @@ var TELEGRAM_CHAT_ID = '8653239953';
 /* Необязательно: свой приёмник заявок (если появится). Имеет приоритет над Telegram. */
 var BOOKING_ENDPOINT = '';
 
-/* Куда открывать ручную отправку, если автоматическая не прошла. */
-var TELEGRAM_SHARE = 'https://t.me/share/url?url=' + encodeURIComponent('https://vanyaka229.github.io/sd-site/') + '&text=';
+/* Куда открывать ручную отправку, если автоматическая не прошла.
+   Это НЕ api.telegram.org: ссылка t.me/<username>?text=... открывает чат студии
+   с уже заполненным текстом заявки. Работает на любом устройстве, в том числе
+   там, где api.telegram.org недоступен (Крым, часть провайдеров РФ).
+   @username студии — из настроек: @sd_dancestudio. */
+var TELEGRAM_USERNAME = 'sd_dancestudio';
+var TELEGRAM_SEND_BASE = 'https://t.me/' + TELEGRAM_USERNAME + '?text=';
 (function () {
   'use strict';
 
@@ -137,6 +142,89 @@ var TELEGRAM_SHARE = 'https://t.me/share/url?url=' + encodeURIComponent('https:/
       else status.removeAttribute('data-state');
     };
 
+    /* Кнопка ручной отправки и сохранённая «готовая» заявка. */
+    var manual = form.querySelector('.booking-form__manual');
+    var READY_KEY = 'sd_booking_ready';
+    var lastMessage = '';
+    /* Мягкий текст вместо слова «ошибка»: заявка готова, её осталось отправить. */
+    var SOFT_TEXT = 'Заявка готова — отправьте её одним нажатием: откроется чат студии с готовым текстом.';
+
+    /* Копирование в буфер — запасной путь, если Telegram не установлен.
+       navigator.clipboard есть только в защищённом контексте (https), поэтому
+       для file:// и старых браузеров держим второй способ через execCommand. */
+    var copyToClipboard = function (text) {
+      var fallback = function () {
+        try {
+          var area = document.createElement('textarea');
+          area.value = text;
+          area.setAttribute('readonly', '');
+          area.style.position = 'fixed';
+          area.style.top = '-2000px';
+          document.body.appendChild(area);
+          area.select();
+          document.execCommand('copy');
+          document.body.removeChild(area);
+        } catch (e) {}
+      };
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text)['catch'](fallback);
+          return;
+        }
+      } catch (e) {}
+      fallback();
+    };
+
+    var rememberReady = function (text) {
+      try { localStorage.setItem(READY_KEY, text); } catch (e) {}
+    };
+
+    // Прошлую «готовую» заявку не теряем: окно откроется с уже живой кнопкой.
+    try {
+      var readySaved = localStorage.getItem(READY_KEY);
+      if (readySaved) {
+        lastMessage = readySaved;
+        if (manual) {
+          manual.hidden = false;
+          manual.setAttribute('href', TELEGRAM_SEND_BASE + encodeURIComponent(readySaved));
+        }
+        if (submit) submit.hidden = true;
+        setStatus('Заявка сохранена — отправьте её одним нажатием: откроется чат студии с готовым текстом.', 'ready');
+      }
+    } catch (e) {}
+
+    /* Заявку собираем заново прямо в момент нажатия: если человек поправил
+       телефон уже после мягкого перехода, в чат уйдёт актуальный текст. */
+    var refreshMessage = function () {
+      var el = form.elements;
+      var nm = el.name ? el.name.value.trim() : '';
+      var ph = el.phone ? el.phone.value.trim() : '';
+      var gr = el.group ? el.group.value.trim() : '';
+      var cm = el.comment ? el.comment.value.trim() : '';
+      if (nm.length < 2 || ph.replace(/\D/g, '').length < 10) return lastMessage;
+      return [
+        'Заявка с сайта SD Dance Studio',
+        'Имя: ' + nm,
+        'Телефон: ' + ph,
+        gr ? 'Группа: ' + gr : '',
+        cm ? 'Комментарий: ' + cm : ''
+      ].filter(Boolean).join('\n');
+    };
+
+    /* Нажатие на кнопку ручной отправки: заявка уходит в буфер — если Telegram
+       на устройстве не установлен, текст можно вставить в чат вручную. */
+    if (manual) {
+      manual.addEventListener('click', function () {
+        var fresh = refreshMessage();
+        if (!fresh) return;
+        lastMessage = fresh;
+        manual.setAttribute('href', TELEGRAM_SEND_BASE + encodeURIComponent(fresh));
+        rememberReady(fresh);
+        copyToClipboard(fresh);
+        manual.textContent = 'Скопировано — вставьте заявку в чат';
+      });
+    }
+
     /* Черновик: если человек случайно закрыл окно, поля не пропадут.
        Для сохранённых значений автосохранение отключаем — иначе браузер
        восстанавливает их уже после того, как мы записали пустые. */
@@ -212,7 +300,6 @@ var TELEGRAM_SHARE = 'https://t.me/share/url?url=' + encodeURIComponent('https:/
         return;
       }
 
-      var manual = form.querySelector('.booking-form__manual');
       var lines = [
         'Заявка с сайта SD Dance Studio',
         'Имя: ' + name,
@@ -221,13 +308,22 @@ var TELEGRAM_SHARE = 'https://t.me/share/url?url=' + encodeURIComponent('https:/
         comment ? 'Комментарий: ' + comment : ''
       ].filter(Boolean);
       var message = lines.join('\n');
+      lastMessage = message;
 
+      /* Никакого слова «ошибка» в основном пути: если Telegram не подтвердил
+         отправку за 7 секунд, показываем мягкий сценарий — заявка готова,
+         отправить её можно одним нажатием. Текст тот же, что уходит ботом. */
       var showManual = function (text) {
         if (manual) {
           manual.hidden = false;
-          manual.setAttribute('href', TELEGRAM_SHARE + encodeURIComponent(message));
+          manual.setAttribute('href', TELEGRAM_SEND_BASE + encodeURIComponent(message));
+          manual.textContent = 'Отправить заявку в Telegram';
         }
-        setStatus(text, 'error');
+        /* На экране должна остаться одна понятная кнопка, а не две одинаковые:
+           прячем «Отправить заявку» и оставляем ручную отправку. */
+        if (submit) { submit.hidden = true; submit.disabled = false; }
+        rememberReady(message);
+        setStatus(text, 'ready');
       };
 
       var endpoint = BOOKING_ENDPOINT || form.getAttribute('data-endpoint');
@@ -240,8 +336,10 @@ var TELEGRAM_SHARE = 'https://t.me/share/url?url=' + encodeURIComponent('https:/
       var done = function () {
         setStatus('Заявка отправлена! Мы свяжемся с вами, чтобы подтвердить запись.', 'ok');
         form.reset();
-        try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+        lastMessage = '';
+        try { localStorage.removeItem(DRAFT_KEY); localStorage.removeItem(READY_KEY); } catch (e) {}
         if (manual) manual.hidden = true;
+        if (submit) submit.hidden = false;
       };
 
       if (endpoint) {
@@ -254,7 +352,7 @@ var TELEGRAM_SHARE = 'https://t.me/share/url?url=' + encodeURIComponent('https:/
           if (!r.ok) throw new Error('HTTP ' + r.status);
           done();
         }).catch(function () {
-          showManual('Не получилось подтвердить отправку. Нажмите кнопку ниже — Telegram откроется с готовым текстом заявки, и мы точно её увидим.');
+          showManual(SOFT_TEXT);
         }).then(function () {
           if (submit) submit.disabled = false;
         });
@@ -311,15 +409,14 @@ var TELEGRAM_SHARE = 'https://t.me/share/url?url=' + encodeURIComponent('https:/
           // что заявка не ушла. Не пугаем человека зря: предлагаем продублировать
           // в Telegram одной кнопкой и не сообщаем о провале.
           console.log('[SD] отправка в Telegram не подтвердилась:', error && error.message, timedOut ? '(таймаут)' : '(сеть)');
-          showManual('Не получилось подтвердить отправку. Нажмите кнопку ниже — Telegram откроется с готовым текстом заявки, и мы точно её увидим.');
+          showManual(SOFT_TEXT);
         }).then(function () {
           if (submit) submit.disabled = false;
         });
         return;
       }
 
-      window.open('https://t.me/share/url?url=' + encodeURIComponent(location.href) +
-        '&text=' + encodeURIComponent(message), '_blank', 'noopener');
+      window.open(TELEGRAM_SEND_BASE + encodeURIComponent(message), '_blank', 'noopener');
       done();
     });
   }

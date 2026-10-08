@@ -44,6 +44,13 @@
     if (revealItems.indexOf(el) === -1) revealItems.push(el);
   });
   var factBlocks = [].slice.call(document.querySelectorAll('.fact, .offer'));
+  /* Числа-факты обязаны получить is-in: в css/motion.css сдвиг
+     `.fact__num { transform: translate3d(0,14px,0) }` снимается только у
+     `.fact.is-in .fact__num`. Без класса число навсегда оставалось на 14 px
+     ниже своего места и на телефоне ложилось на подпись. */
+  factBlocks.forEach(function (el) {
+    if (revealItems.indexOf(el) === -1) revealItems.push(el);
+  });
 
   /* Что уже видно при загрузке — раскрываем сразу, не ожидая колбэка
      наблюдателя: у липких блоков он иногда не приходит (округление долей). */

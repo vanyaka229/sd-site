@@ -574,8 +574,6 @@ ul, ol { padding: 0; list-style: none; }
 
 .is-ready .hero__bg { transform: scale(1); opacity: 1; }
 
-/* Резкий кадр героя. Ширина слота ограничена натуральной шириной кадра:
-   при 2x это максимум 850 CSS px — здесь 670 px, то есть с запасом. */
 /* Резкий кадр героя. Правило: слот не шире своих пикселей / 2.
    Кадр занимает правую колонку целиком — под него уходит и вертикаль заголовка,
    поэтому кадр получается крупным, но не растянутым. */
@@ -591,8 +589,6 @@ ul, ol { padding: 0; list-style: none; }
   transform: translate3d(0, 24px, 0);
   transition: opacity 0.9s ease, transform 1.1s var(--ease-out);
   transition-delay: 0.22s;
-  /* подпись кадра крепится к самому кадру на всех ширинах */
-  position: relative;
 }
 
 .is-ready .hero__shot { opacity: 1; transform: none; }
@@ -603,8 +599,10 @@ ul, ol { padding: 0; list-style: none; }
   display: block;
   width: 100%;
   height: auto;
-  /* Кадр не выше 420 px, хотя исходник позволяет больше: герой по высоте
-     ограничен экраном, и вертикальный бюджет отдан типографике. */
+  /* потолок ширины: 700 CSS px — это вдвое меньше натуральной ширины кадра,
+     поэтому на retina кадр остаётся резким даже на экранах 2560 px */
+  max-width: 700px;
+  /* потолок высоты: герой ограничен экраном, вертикаль отдана типографике */
   max-height: 420px;
   aspect-ratio: 3 / 4;
   object-fit: cover;
@@ -746,6 +744,7 @@ ul, ol { padding: 0; list-style: none; }
   /* в потоке кадр снова горизонтальный — вертикальная обрезка 3:4 не нужна,
      а потолок высоты снимаем: её задаёт формат 16:9 */
   .hero__shot img {
+    max-width: none;
     max-height: none;
     height: 100%;
     aspect-ratio: 16 / 9;
@@ -1030,7 +1029,9 @@ ul, ol { padding: 0; list-style: none; }
   /* число и подпись не должны пересекаться ни на одной ширине */
   justify-content: flex-start;
   min-width: 0;
-  gap: clamp(4px, 0.6vw, 10px);
+  /* Число выезжает снизу на 14 px (css/motion.css), поэтому зазор держим
+     с запасом: минимум 8 px — иначе на планшете сдвиг съедает воздух. */
+  gap: clamp(8px, 0.7vw, 12px);
   padding: clamp(24px, 3.4vw, 52px) clamp(18px, 2.2vw, 38px) clamp(28px, 3.6vw, 56px);
   border-left: 1px solid rgb(255 255 255 / 18%);
 }
@@ -1306,7 +1307,9 @@ ul, ol { padding: 0; list-style: none; }
   background: var(--coal);
 }
 
-.rail__item--wide { width: clamp(300px, 82vw, 912px); aspect-ratio: 16 / 9; }
+/* Широкий слот рейла ограничен 856 px: это натуральная ширина самого крупного
+   широкого кадра (groups-hero-class 856x464) — он остаётся резким на retina. */
+.rail__item--wide { width: clamp(300px, 82vw, 856px); aspect-ratio: 16 / 9; }
 
 .rail__item img {
   width: 100%; height: 100%;
@@ -2180,6 +2183,11 @@ ul, ol { padding: 0; list-style: none; }
 
 .form-note { font-size: var(--fs-micro); line-height: 1.55; opacity: 0.72; }
 
+/* У .btn свой display, и он перебивает браузерное правило для атрибута hidden.
+   Из-за этого кнопка «Отправить заявку в Telegram» с атрибутом hidden была
+   видна всегда — с самого открытия окна записи. */
+.booking-form .btn[hidden] { display: none; }
+
 .form-status {
   min-height: 1.3em;
   font-size: var(--fs-small);
@@ -2188,6 +2196,9 @@ ul, ol { padding: 0; list-style: none; }
 
 .form-status[data-state='ok'] { color: #06451f; font-weight: 600; }
 .form-status[data-state='error'] { color: #7a0d1e; font-weight: 600; }
+/* «Готова, отправьте одним нажатием» — не ошибка, а следующий шаг: тёплая
+   маджента вместо красного, чтобы человек не пугался. */
+.form-status[data-state='ready'] { color: var(--magenta-deep); font-weight: 600; }
 .form-status[data-state='pending'] { opacity: 0.68; }
 
 /* --- 27. Липкая кнопка и «наверх» ------------------------------------------ */
@@ -2339,7 +2350,11 @@ body.is-ready.has-mobile-cta {
   .row-item__num { font-size: clamp(44px, 16vw, 76px); }
 
   .facts__grid { grid-template-columns: 1fr; }
-  .fact { border-left: 0; border-top: 1px solid rgb(255 255 255 / 18%); }
+  /* На телефоне кегль цифр минимальный (46 px), поэтому выезд на 14 px
+     (css/motion.css: .fact__num, снимается классом .fact.is-in) съедал весь
+     зазор: числа 2026 / 6+ / 300 ложились на подпись (замер −10 px при 375 и
+     390). Даём 18 px — движение сохраняется, пересечения нет ни в один момент. */
+  .fact { gap: 18px; border-left: 0; border-top: 1px solid rgb(255 255 255 / 18%); }
   .fact:first-child { border-top: 0; }
 
   .price-grid { grid-template-columns: 1fr; }
