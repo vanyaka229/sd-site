@@ -1,0 +1,35 @@
+[Unit]
+Description=SD Dance Studio: приёмник заявок (POST /tg -> Telegram)
+Documentation=file:/root/VPS-README.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=sdtg
+Group=sdtg
+WorkingDirectory=/opt/sd-tg-receiver
+
+# Секреты (токен бота, chat_id) — только в этом файле, права 600, владелец root:sdtg.
+# В юните секретов нет, поэтому его можно показывать и хранить в репозитории.
+EnvironmentFile=/etc/sd-studio/tg-receiver.env
+
+ExecStart=/usr/bin/node /opt/sd-tg-receiver/tg-receiver.js
+Restart=always
+RestartSec=3
+
+# Минимальные права: процессу нужно только читать /etc/sd-studio и слушать порт
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=tg-receiver
+
+[Install]
+WantedBy=multi-user.target

@@ -67,7 +67,7 @@ https://api.telegram.org/bot<ТОКЕН>/getUpdates
    | --- | --- |
    | `BOT_TOKEN` | токен из шага 1 |
    | `CHAT_ID` | id из шага 3 |
-   | `ALLOWED_ORIGIN` | адрес сайта, например `https://vanyaka229.github.io` |
+   | `ALLOWED_ORIGIN` | адрес сайта, например `https://sd-dance-st.ru` |
 
 5. Сохраните и нажмите **Deploy** ещё раз, чтобы переменные применились.
 6. Скопируйте адрес воркера — он вида

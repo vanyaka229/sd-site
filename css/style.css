@@ -2383,3 +2383,30 @@ body.is-ready.has-mobile-cta {
 @media (min-width: 2400px) {
   :root { --shell: 1760px; }
 }
+
+/* --- 32. Вертикальный ролик ------------------------------------------------ */
+/* Разметка блока пока закомментирована в index.html: файл монтажа ещё не готов.
+   Стили готовы заранее, чтобы включение было одним действием.
+   Кадр строго 9:16, видео грузится лениво (preload="none" в разметке). */
+.reel { background: var(--black); color: var(--white); }
+
+.reel__figure { margin: 0; display: grid; justify-items: center; gap: 16px; }
+
+.reel__frame {
+  position: relative;
+  width: min(100%, 420px);
+  aspect-ratio: 9 / 16;
+  background: var(--coal-2);
+  overflow: hidden;
+}
+
+.reel__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--coal-2);
+}
+
+.reel__cap { font-size: var(--fs-small); color: rgb(255 255 255 / 62%); text-align: center; }
+.reel__link { color: var(--pink); }

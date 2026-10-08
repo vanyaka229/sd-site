@@ -23,8 +23,16 @@
 var TELEGRAM_BOT_TOKEN = '8936238994:AAESTNjGWSDPqnoifiMPTsgXqM9E-FgilU0';
 var TELEGRAM_CHAT_ID = '8653239953';
 
-/* Необязательно: свой приёмник заявок (если появится). Имеет приоритет над Telegram. */
+/* Необязательно: внешний приёмник заявок (Web3Forms/Formspree и подобные).
+   Если задан, пробуется после нашего приёмника на VPS. */
 var BOOKING_ENDPOINT = '';
+
+/* Наш приёмник заявок на VPS: он сам пересылает заявку в Telegram, поэтому
+   работает и там, где браузер до api.telegram.org не достаёт (Крым, часть
+   провайдеров РФ). Пробуется ПЕРВЫМ. Адрес меняется только здесь.
+   Развёртывание: deploy/VPS-ПРИЁМНИК.md. */
+var BOOKING_SERVER = 'https://api.sd-dance-st.ru/tg';
+var BOOKING_SERVER_TIMEOUT = 5000;   // ждём приёмник не дольше 5 секунд
 
 /* Куда открывать ручную отправку, если автоматическая не прошла.
    Это НЕ api.telegram.org: ссылка t.me/<username>?text=... открывает чат студии
@@ -342,82 +350,145 @@ var TELEGRAM_SEND_BASE = 'https://t.me/' + TELEGRAM_USERNAME + '?text=';
         if (submit) submit.hidden = false;
       };
 
-      if (endpoint) {
-        if (submit) submit.disabled = true;
-        fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({ name: name, phone: phone, group: group, comment: comment, message: message })
-        }).then(function (r) {
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          done();
-        }).catch(function () {
-          showManual(SOFT_TEXT);
-        }).then(function () {
-          if (submit) submit.disabled = false;
-        });
-        return;
-      }
+      /* Порядок попыток:
+           1) наш приёмник на VPS (работает там, где браузер до Telegram не достаёт);
+           2) api.telegram.org напрямую;
+           3) мягкий режим «отправьте одним нажатием».
+         Любой успех означает, что заявка отправлена. */
+      var settled = false;
+      var finishDone = function () { if (settled) return; settled = true; done(); };
+      var finishSoft = function () { if (settled) return; settled = true; showManual(SOFT_TEXT); };
 
-      // простой путь: отправляем прямо в Telegram через бота
-      if (tgReady) {
-        var last = 0;
-        try { last = Number(localStorage.getItem('sd_last_booking') || 0); } catch (e) {}
-        if (Date.now() - last < 30000) {
-          // защита от дублей: Telegram уже получил такую заявку минуту назад
-          done();
+      var fallback = function () {
+        if (endpoint) {
+          if (submit) submit.disabled = true;
+          fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({ name: name, phone: phone, group: group, comment: comment, message: message })
+          }).then(function (r) {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            finishDone();
+          }).catch(function () {
+            finishSoft();
+          }).then(function () {
+            if (submit) submit.disabled = false;
+          });
           return;
         }
-        var url = 'https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/sendMessage';
-        // получателей можно перечислить через запятую: '688076805,123456789'
-        var chats = String(TELEGRAM_CHAT_ID).split(',').map(function (s) { return s.trim(); }).filter(Boolean);
-        if (submit) submit.disabled = true;
 
-        // Страховка по времени: если сеть «съела» запрос, через 7 секунд сдаёмся,
-        // разблокируем кнопку и предлагаем отправить вручную. Гонка промисов
-        // срабатывает даже если сам запрос отмену проигнорировал.
-        var controller = window.AbortController ? new AbortController() : null;
-        var timedOut = false;
-        var guard = new Promise(function (_, reject) {
+        // простой путь: отправляем прямо в Telegram через бота
+        if (tgReady) {
+          var last = 0;
+          try { last = Number(localStorage.getItem('sd_last_booking') || 0); } catch (e) {}
+          if (Date.now() - last < 30000) {
+            // защита от дублей: Telegram уже получил такую заявку минуту назад
+            finishDone();
+            return;
+          }
+          var url = 'https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/sendMessage';
+          // получателей можно перечислить через запятую: '688076805,123456789'
+          var chats = String(TELEGRAM_CHAT_ID).split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+          if (submit) submit.disabled = true;
+
+          // Страховка по времени: если сеть «съела» запрос, через 7 секунд сдаёмся,
+          // разблокируем кнопку и предлагаем отправить вручную. Гонка промисов
+          // срабатывает даже если сам запрос отмену проигнорировал.
+          var controller = window.AbortController ? new AbortController() : null;
+          var timedOut = false;
+          var guard = new Promise(function (_, reject) {
+            setTimeout(function () {
+              timedOut = true;
+              if (controller) { try { controller.abort(); } catch (e) {} }
+              reject(new Error('timeout'));
+            }, 7000);
+          });
+
+          // Telegram не отдаёт CORS-заголовки, поэтому запросы отправляем в режиме no-cors:
+          // доставка происходит, а ответ браузер прочитать не даёт.
+          Promise.race([Promise.all(chats.map(function (chatId) {
+            var body = new URLSearchParams({
+              chat_id: chatId,
+              text: message,
+              disable_web_page_preview: 'true'
+            });
+            return fetch(url, {
+              method: 'POST',
+              mode: 'no-cors',
+              signal: controller ? controller.signal : undefined,
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+              body: body.toString()
+            });
+          })), guard]).then(function () {
+            try { localStorage.setItem('sd_last_booking', String(Date.now())); } catch (e) {}
+            finishDone();
+          }).catch(function (error) {
+            // В режиме no-cors ответ прочитать нельзя, поэтому «ошибка сети» не значит,
+            // что заявка не ушла. Не пугаем человека зря: предлагаем продублировать
+            // в Telegram одной кнопкой и не сообщаем о провале.
+            console.log('[SD] отправка в Telegram не подтвердилась:', error && error.message, timedOut ? '(таймаут)' : '(сеть)');
+            finishSoft();
+          }).then(function () {
+            if (submit) submit.disabled = false;
+          });
+          return;
+        }
+
+        window.open(TELEGRAM_SEND_BASE + encodeURIComponent(message), '_blank', 'noopener');
+        finishDone();
+      };
+
+      /* Попытка 1: наш приёмник на VPS. Он сам пересылает заявку в Telegram,
+         поэтому работает даже там, где браузер до api.telegram.org не достаёт.
+         Ответ читаем как JSON (сервер отдаёт CORS-заголовки для нашего домена). */
+      if (BOOKING_SERVER && window.fetch) {
+        if (submit) submit.disabled = true;
+        var serverController = window.AbortController ? new AbortController() : null;
+        var serverTimedOut = false;
+        var serverGuard = new Promise(function (_, reject) {
           setTimeout(function () {
-            timedOut = true;
-            if (controller) { try { controller.abort(); } catch (e) {} }
+            serverTimedOut = true;
+            if (serverController) { try { serverController.abort(); } catch (e) {} }
             reject(new Error('timeout'));
-          }, 7000);
+          }, BOOKING_SERVER_TIMEOUT);
+        });
+        var serverCall = fetch(BOOKING_SERVER, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          signal: serverController ? serverController.signal : undefined,
+          body: JSON.stringify({
+            name: name,
+            phone: phone,
+            group: group,
+            comment: comment,
+            company: honeypot ? honeypot.value : ''
+          })
+        }).then(function (r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json().catch(function () { return null; });
+        }).then(function (data) {
+          /* Успехом считаем ТОЛЬКО явное {"ok":true}. Иначе чужой сервер,
+             ответивший 200, был бы принят за доставленную заявку. */
+          if (!data || data.ok !== true) {
+            throw new Error('ответ без ok:true' + (data && data.error ? ' (' + data.error + ')' : ''));
+          }
+          return true;
         });
 
-        // Telegram не отдаёт CORS-заголовки, поэтому запросы отправляем в режиме no-cors:
-        // доставка происходит, а ответ браузер прочитать не даёт.
-        Promise.race([Promise.all(chats.map(function (chatId) {
-          var body = new URLSearchParams({
-            chat_id: chatId,
-            text: message,
-            disable_web_page_preview: 'true'
-          });
-          return fetch(url, {
-            method: 'POST',
-            mode: 'no-cors',
-            signal: controller ? controller.signal : undefined,
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-            body: body.toString()
-          });
-        })), guard]).then(function () {
-          try { localStorage.setItem('sd_last_booking', String(Date.now())); } catch (e) {}
-          done();
-        }).catch(function (error) {
-          // В режиме no-cors ответ прочитать нельзя, поэтому «ошибка сети» не значит,
-          // что заявка не ушла. Не пугаем человека зря: предлагаем продублировать
-          // в Telegram одной кнопкой и не сообщаем о провале.
-          console.log('[SD] отправка в Telegram не подтвердилась:', error && error.message, timedOut ? '(таймаут)' : '(сеть)');
-          showManual(SOFT_TEXT);
-        }).then(function () {
+        Promise.race([serverCall, serverGuard]).then(function () {
           if (submit) submit.disabled = false;
+          finishDone();
+        }).catch(function (error) {
+          if (settled) return;
+          console.log('[SD] приёмник на VPS не ответил:', error && error.message,
+            serverTimedOut ? '(таймаут)' : '(сеть)', '— пробую Telegram напрямую');
+          if (submit) submit.disabled = false;
+          fallback();
         });
         return;
       }
 
-      window.open(TELEGRAM_SEND_BASE + encodeURIComponent(message), '_blank', 'noopener');
-      done();
+      fallback();
     });
   }
 

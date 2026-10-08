@@ -1,0 +1,5 @@
+# SD Dance Studio — https://sd-dance-st.ru
+User-agent: *
+Allow: /
+
+Sitemap: https://sd-dance-st.ru/sitemap.xml

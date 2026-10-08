@@ -8,7 +8,7 @@
  * Переменные окружения (Settings → Variables and Secrets):
  *   BOT_TOKEN      — токен бота от @BotFather
  *   CHAT_ID        — куда присылать заявки (id чата @sd_dancestudio)
- *   ALLOWED_ORIGIN — адрес сайта, например https://vanyaka229.github.io
+ *   ALLOWED_ORIGIN — адрес сайта, например https://sd-dance-st.ru
  *
  * Деплой: Cloudflare → Workers & Pages → Create → Worker → вставить этот код.
  */

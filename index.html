@@ -9,13 +9,13 @@
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fcc8f3">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111111">
 <meta name="color-scheme" content="light dark">
-<link rel="canonical" href="https://vanyaka229.github.io/sd-site/">
+<link rel="canonical" href="https://sd-dance-st.ru/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SD Dance Studio">
 <meta property="og:title" content="SD Dance Studio — школа танцев в Ялте">
 <meta property="og:description" content="Dancehall, Female Dancehall и Dance Mix в Ялте. Танцуем, импровизируем и выступаем на чемпионатах.">
-<meta property="og:url" content="https://vanyaka229.github.io/sd-site/">
-<meta property="og:image" content="https://vanyaka229.github.io/sd-site/assets/img/og-preview.jpg">
+<meta property="og:url" content="https://sd-dance-st.ru/">
+<meta property="og:image" content="https://sd-dance-st.ru/og-preview.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -24,7 +24,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="SD Dance Studio — школа танцев в Ялте">
 <meta name="twitter:description" content="Dancehall, Female Dancehall и Dance Mix в Ялте. Пробное занятие — 300 ₽.">
-<meta name="twitter:image" content="https://vanyaka229.github.io/sd-site/assets/img/og-preview.jpg">
+<meta name="twitter:image" content="https://sd-dance-st.ru/og-preview.jpg">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/oswald-cyrillic-700.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/onest-cyrillic-400.woff2" as="font" type="font/woff2" crossorigin>
@@ -38,12 +38,12 @@
 {
   "@context": "https://schema.org",
   "@type": "DanceSchool",
-  "@id": "https://vanyaka229.github.io/sd-site/#studio",
+  "@id": "https://sd-dance-st.ru/#studio",
   "name": "SD Dance Studio",
   "description": "Танцевальная школа в Ялте: dancehall, female dancehall и dance mix для детей от 6 лет и взрослых, джемы и практики.",
-  "url": "https://vanyaka229.github.io/sd-site/",
-  "image": "https://vanyaka229.github.io/sd-site/assets/img/og-preview.jpg",
-  "logo": "https://vanyaka229.github.io/sd-site/assets/img/logo-sd.png",
+  "url": "https://sd-dance-st.ru/",
+  "image": "https://sd-dance-st.ru/og-preview.jpg",
+  "logo": "https://sd-dance-st.ru/assets/img/logo-sd.png",
   "telephone": "+7 (949) 033-24-31",
   "address": { "@type": "PostalAddress", "addressLocality": "Ялта" },
   "areaServed": "Ялта",
@@ -495,6 +495,36 @@
       </div>
     </div>
   </section>
+
+  <!-- ================= Сцена 08. Вертикальный ролик (ВЫКЛЮЧЕНО) ==============
+       Блок готов и ждёт файл монтажа. Чтобы включить:
+         1) положите ролик в assets/video/sd-studio-reel.mp4 (вертикальный, 9:16);
+         2) снимите эти строки комментария — больше ничего не нужно: видео грузится
+            лениво (preload="none"), а постер assets/img/reel-poster.jpg уже готов.
+       Заменить постер настоящим кадром из ролика:
+         ffmpeg -ss 00:00:02 -i ролик.mp4 -frames:v 1 -vf scale=1080:-2 assets/img/reel-poster.jpg
+  <section class="sec band reel" id="reel">
+    <div class="shell">
+      <div class="sec-head">
+        <span class="micro rv">08 / Ролик</span>
+        <h2 class="sec-head__title display rv">Одна минута <span class="accent">в студии</span></h2>
+      </div>
+      <figure class="reel__figure">
+        <div class="reel__frame">
+          <video class="reel__video" controls playsinline preload="none"
+                 width="1080" height="1920"
+                 poster="assets/img/reel-poster.jpg"
+                 aria-label="Вертикальный промо-ролик студии">
+            <source src="assets/video/sd-studio-reel.mp4" type="video/mp4">
+            Ваш браузер не показывает видео —
+            <a class="reel__link" href="assets/video/sd-studio-reel.mp4">скачать файл</a>.
+          </video>
+        </div>
+        <figcaption class="reel__cap">Вертикальный ролик 9:16 — для телефона и сторис</figcaption>
+      </figure>
+    </div>
+  </section>
+  -->
 
   <!-- Отзывы: раздел готов, но включаем только с реальными отзывами.
        Пришлите 3 отзыва (текст + имя) — раскомментируйте блок и впишите их.
