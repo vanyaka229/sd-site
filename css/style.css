@@ -1142,23 +1142,6 @@ ul, ol { padding: 0; list-style: none; }
   background: linear-gradient(180deg, rgb(11 11 11 / 52%) 0%, rgb(11 11 11 / 12%) 45%, rgb(11 11 11 / 72%) 100%);
 }
 
-/* Резкий кадр полосы: своя колонка, ширина не выше натуральной (854 px) */
-.photoband__shot {
-  position: relative;
-  z-index: 2;
-  width: min(100%, 854px);
-  aspect-ratio: 4 / 5;
-  margin: 0;
-  overflow: hidden;
-  box-shadow: 0 30px 90px rgb(0 0 0 / 45%);
-}
-
-.photoband__shot img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  object-position: 50% 40%;
-}
-
 /* Полоса: во всю ширину идёт размытая версия кадра, поверх неё — резкий кадр
    в своём натуральном размере. Слева типографика, внизу подпись. */
 .photoband__inner {
@@ -1185,8 +1168,14 @@ ul, ol { padding: 0; list-style: none; }
   box-shadow: 0 30px 90px rgb(0 0 0 / 45%);
 }
 
+/* Параллакс (data-parallax="0.16") сдвигает кадр до ±16 px. Чтобы сдвиг не
+   открывал полосу фона у края, кадр чуть выше и шире своего слота: 4% запаса
+   сверху и снизу хватает на весь ход. */
 .photoband__shot img {
-  width: 100%; height: 100%;
+  position: relative;
+  top: -4%;
+  width: 100%;
+  height: 108%;
   object-fit: cover;
   object-position: 50% 40%;
 }
@@ -1717,25 +1706,30 @@ ul, ol { padding: 0; list-style: none; }
   background:
     radial-gradient(120% 90% at 30% 78%, rgb(251 18 162 / 46%) 0%, transparent 60%),
     linear-gradient(180deg, #161616 0%, #0a0a0a 100%);
-  min-height: clamp(320px, 52vw, 660px);
+  /* Пропорция вместо пиксельного min-height: на десктопе высоту всё равно
+     задаёт строка сетки (панель тянется по тексту), на планшете и телефоне
+     высоту считает aspect-ratio — поэтому на промежуточных ширинах панель
+     не «прыгает» и не режет фигуру. */
+  aspect-ratio: 4 / 5;
+  min-height: 0;
 }
 
+/* Фигура тренера — вырезка на прозрачном фоне, поэтому её место в потоке,
+   а не position:absolute (раньше параллакс из js/motion.js писал inline
+   transform и затирал translateX(-50%) — фигуру сдвигало на пол-ширины
+   и срезало краем панели). Теперь картинка просто заполняет контейнер:
+   object-fit: contain сохраняет всю фигуру (cover срезал бы руки и ноги),
+   object-position прижимает её к «полу» панели. */
 .gpanel__media img {
-  position: absolute;
-  left: 50%; bottom: 0;
-  width: auto;
-  max-width: 86%;
-  height: auto;
-  /* фигура всегда помещается в панель: раньше при узкой колонке
-     вырезку срезало краем и она «пропадала» */
-  max-height: 96%;
-  transform: translateX(-50%);
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-  object-position: bottom center;
-  will-change: transform;
+  object-position: 50% 100%;
 }
 
-.gpanel--alt .gpanel__media img { max-width: 78%; }
+/* Две фигуры в кадре занимают его плотнее — даём им небольшие поля */
+.gpanel--alt .gpanel__media img { padding-inline: 6%; }
 
 /* Розовая звезда-наклейка убрана по замечанию владельца:
    правило оставлено пустым, чтобы не терять историю правки. */
@@ -1786,6 +1780,10 @@ ul, ol { padding: 0; list-style: none; }
   position: relative;
   overflow: hidden;
   background: #0e0e0e;
+  /* Появление блока отдано кадру (.community img в css/motion.css). Сдвиг самой
+     секции на 22 px (базовый --rv-y) визуально наезжал на следующую — на
+     планшете это читалось как «верх секции поверх предыдущей». */
+  --rv-y: 0px;
 }
 
 .community img {
@@ -2313,7 +2311,10 @@ body.is-ready.has-mobile-cta {
     padding-block: clamp(24px, 4vw, 44px) clamp(20px, 3vw, 36px);
   }
 
-  .gpanel__media { min-height: clamp(300px, 62vw, 520px); }
+  /* Панель тренера в одну колонку: широкий кинематографичный кадр вместо
+     высокой плиты — фигура остаётся целиком, панель не растягивается на
+     пол-экрана по высоте. */
+  .gpanel__media { aspect-ratio: 16 / 9; min-height: 0; }
 
   .offer__inner { grid-template-columns: 1fr; }
 
@@ -2363,6 +2364,9 @@ body.is-ready.has-mobile-cta {
   .footer__grid { grid-template-columns: 1fr; }
 
   .mobile-cta { display: block; }
+
+  /* На телефоне 16:9 для панели тренера слишком низкий — фигура мельчает */
+  .gpanel__media { aspect-ratio: 4 / 3; }
 
   .rail { padding-inline: var(--gutter); }
 
