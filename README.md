@@ -320,8 +320,8 @@ ffmpeg -y -i <мастер>.mp4 -c:v h264_nvenc -preset p5 -rc vbr \
 
 ## Что стоит заменить перед публикацией
 
-1. **Ссылки на соцсети** — в футере и модальном окне указаны `instagram.com/sd_dancestudio`,
-   `t.me/sd_dancestudio`, `t.me/danceyalta`, `tiktok.com/@sd_dancestudio`. Проверьте никнеймы.
+1. **Ссылки на соцсети** — в футере и модальном окне указаны `www.instagram.com/sd.dance.yalta`,
+   `t.me/sd_dancestudio`, `t.me/danceyalta`, `tiktok.com/@sd.crewfam`. Проверьте никнеймы.
 2. **Телефон** `+7 (949) 033-24-31` — в футере и в модальном окне (`tel:`).
 3. **Домен** — `canonical`, `og:url`, `og:image`, `twitter:image` и микроразметка указывают на
    `https://sd-dance-st.ru/`; превью ссылки лежит в корне сайта (`og-preview.jpg`). Если домен
